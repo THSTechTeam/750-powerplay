@@ -32,6 +32,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -49,6 +50,7 @@ public class TankTest extends OpMode
     private DcMotor frontRight = null;
     private DcMotor rearLeft = null;
     private DcMotor rearRight = null;
+    private DcMotor carouselWheel = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -64,6 +66,7 @@ public class TankTest extends OpMode
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         rearLeft   = hardwareMap.get(DcMotor.class, "rearLeft");
         rearRight  = hardwareMap.get(DcMotor.class, "rearRight");
+        carouselWheel = hardwareMap.get(DcMotor.class, "carouselWheel");
 
 
         // Making a shot in the dark guess that the right ones need to be reeversed.
@@ -71,6 +74,7 @@ public class TankTest extends OpMode
         rearLeft.setDirection(DcMotor.Direction.FORWARD);
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         rearRight.setDirection(DcMotor.Direction.REVERSE);
+        carouselWheel.setDirection(DcMotor.Direction.FORWARD);
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -99,22 +103,25 @@ public class TankTest extends OpMode
         // Setup a variable for each drive wheel to save power level for telemetry
         double leftPower;
         double rightPower;
+        double carouselPower;
 
         // Choose to drive using either Tank Mode, or POV Mode
         // Comment out the method that's not used.  The default below is POV.
 
         leftPower  = -gamepad1.left_stick_y ;
         rightPower = -gamepad1.right_stick_y ;
+        carouselPower = gamepad1.right_trigger;
 
         // Send calculated power to wheels
         frontLeft.setPower(leftPower);
         rearLeft.setPower(leftPower);
         frontRight.setPower(rightPower);
         rearRight.setPower(rightPower);
+        carouselWheel.setPower(carouselPower);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower, carouselPower);
     }
 
     /*
