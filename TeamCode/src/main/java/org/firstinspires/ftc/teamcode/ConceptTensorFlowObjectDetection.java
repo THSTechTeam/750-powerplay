@@ -27,11 +27,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+<<<<<<< HEAD
 package org.firstinspires.ftc.teamcode;
+=======
+package org.firstinspires.ftc.robotcontroller.external.samples;
+>>>>>>> 797a4a41fcb6bb54bdd495c569dae64ac7cd000a
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+<<<<<<< HEAD
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -40,6 +45,14 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
+=======
+import java.util.List;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+>>>>>>> 797a4a41fcb6bb54bdd495c569dae64ac7cd000a
 
 /**
  * This 2020-2021 OpMode illustrates the basics of using the TensorFlow Object Detection API to
@@ -52,7 +65,11 @@ import java.util.List;
  * is explained below.
  */
 @TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
+<<<<<<< HEAD
 @Disabled
+=======
+//@Disabled
+>>>>>>> 797a4a41fcb6bb54bdd495c569dae64ac7cd000a
 public class ConceptTensorFlowObjectDetection extends LinearOpMode {
   /* Note: This sample uses the all-objects Tensor Flow model (FreightFrenzy_BCDM.tflite), which contains
    * the following 4 detectable objects
@@ -86,7 +103,11 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
      * and paste it in to your code on the next line, between the double quotes.
      */
     private static final String VUFORIA_KEY =
+<<<<<<< HEAD
             " -- YOUR NEW VUFORIA KEY GOES HERE  --- ";
+=======
+            "AboYhDH/////AAABmQsjktyIQk0yh9uC4mJ2ZIVF9koH50+zKA1iIRrZeTxVGLcGtHMtlOTOox7FlE7SR0sdjjcP2tJK0fmQ6uPhTX3GyA2pvFd2utrSH2rs5pJz59sCGhDz2UMHNcIuacEjvYfgHArYxTbcLGZBEk9Y1YQT6wA3c/IR+INEt/TvSqvVusdBpfzpnx8NOCe3MtliEpH2+Z5wID1URumjt7XR5lzV8YqQOXadbF7Bq+4Gb1DNWHBAY3OrLNfzLVx4Ys5Tf1QFyeHVhuxUb3YiO1FIXyrZQpYrT2hx4NbCADebV1+iHU0PbImOQZSSDqVHSbDM6ygYyfwtWHYDZTzLnoKCveVa8NIt581hE2jrurbecj7/";
+>>>>>>> 797a4a41fcb6bb54bdd495c569dae64ac7cd000a
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
