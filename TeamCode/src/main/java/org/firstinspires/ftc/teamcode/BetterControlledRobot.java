@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="Linear_OpMode", group="Teleop")
-public class TestTeleop extends LinearOpMode {
+@TeleOp(name="Better_Control", group="Teleop")
+public class BetterControlledRobot extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor FleftDrive = null;
@@ -24,10 +24,10 @@ public class TestTeleop extends LinearOpMode {
         telemetry.update();
 
 
-        FleftDrive = hardwareMap.get(DcMotor.class, "FleftDrive");
-        FrightDrive = hardwareMap.get(DcMotor.class, "FrightDrive");
-        BleftDrive = hardwareMap.get(DcMotor.class, "BleftDrive");
-        BrightDrive = hardwareMap.get(DcMotor.class, "BrightDrive");
+        FleftDrive = hardwareMap.get(DcMotor.class, "frontLeft");
+        FrightDrive = hardwareMap.get(DcMotor.class, "frontRight");
+        BleftDrive = hardwareMap.get(DcMotor.class, "rearLeft");
+        BrightDrive = hardwareMap.get(DcMotor.class, "rearRight");
 
 
         FleftDrive.setDirection(DcMotor.Direction.FORWARD);
