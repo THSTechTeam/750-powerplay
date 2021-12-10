@@ -89,8 +89,8 @@ public class RedCaroRetry extends LinearOpMode {
         sleep(700);
         DriveForward(1);
         sleep(460);
-        turnLeft(.21);
-        sleep(1225);
+        turnLeft(.225);
+        sleep(1220);
         DriveForward(.35);
         sleep(2490);
         stopRobot();
