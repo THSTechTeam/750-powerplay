@@ -6,11 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-
-//first attempt at actual autonomous mode
-
-@Autonomous(name="Auto BlueCheck", group="Auto")
-public class BlueCaroSimple extends LinearOpMode {
+//autonomous mode for red side closest to carousel, place closest puzzle piece to carousel along seam
+@Autonomous(name="Auto RedCheck", group="Auto")
+public class RedCaroCheck extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -83,35 +81,23 @@ public class BlueCaroSimple extends LinearOpMode {
 
         waitForStart();
 
-        DriveForward(.6);
-        sleep(400);
-        turnRight(.85);
-        sleep(400);
-        DriveForward(.5);
-        sleep(2000);
-        stopRobot();
-        carouselWheel.setPower(-1);
-        sleep(2750);
-        turnLeft(1);
-        sleep(500);
-        DriveForward(.6);
-        sleep(350);
-
-
-        /*turnRight(.4);
-        sleep(725);
+        DriveForward(.85);
+        sleep(800);
+        turnLeft(.3);
+        sleep(700);
         DriveForward(1);
         sleep(460);
-        turnRight(.19);
-        sleep(1300);
+        turnLeft(.225);
+        sleep(1220);
         DriveForward(.35);
         sleep(2490);
         stopRobot();
-        carouselWheel.setPower(-1);
+        carouselWheel.setPower(1);
         sleep(2750);
         DriveForward(-80);
         sleep(350);
-         turnRight(.6);
+
+       /* turnRight(.6);
         sleep(755);
         DriveForward(1);
         sleep(1900);

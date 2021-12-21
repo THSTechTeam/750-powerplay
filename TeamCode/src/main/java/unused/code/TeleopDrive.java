@@ -1,13 +1,16 @@
-package org.firstinspires.ftc.teamcode;
+//boring teleop no caro no fun math
 
+package unused.code;
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import java.lang.annotation.Target;
 
+@Disabled
 @TeleOp(name="TeleOpDrive", group="Test")
 
-//@Disabled
 public class TeleopDrive extends LinearOpMode{
 
     private DcMotor frontLeft;

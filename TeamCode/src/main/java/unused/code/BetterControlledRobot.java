@@ -1,5 +1,8 @@
-package org.firstinspires.ftc.teamcode;
+//this is the teleop that has better control and fancy math but has no carousel code
 
+package unused.code;
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,6 +11,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+
+@Disabled
 @TeleOp(name="Better_Control", group="Teleop")
 public class BetterControlledRobot extends LinearOpMode {
 

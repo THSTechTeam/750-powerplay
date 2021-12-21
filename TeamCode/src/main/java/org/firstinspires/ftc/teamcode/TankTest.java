@@ -40,8 +40,10 @@ import com.qualcomm.robotcore.util.Range;
  * This OpMode is for a very simple four-wheeled robot
  */
 
+//idk some kind of regular drive with carousel but has the weird controls
 
-@TeleOp(name="Test OpMode", group="Iterative Opmode")
+
+@TeleOp(name="TankTest", group="Iterative Opmode")
 public class TankTest extends OpMode
 {
     // Declare OpMode members.

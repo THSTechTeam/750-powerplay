@@ -1,16 +1,48 @@
+/* Copyright (c) 2017 FIRST. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted (subject to the limitations in the disclaimer below) provided that
+ * the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this list
+ * of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * promote products derived from this software without specific prior written permission.
+ *
+ * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
+ * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
-package org.firstinspires.ftc.teamcode;
+package unused.code;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;//
 
 
 //first attempt at actual autonomous mode
 
-@Autonomous(name="Auto RedCheck", group="Auto")
-public class RedCaroRetry extends LinearOpMode {
+@Disabled
+@Autonomous(name="Auto 11/30", group="Auto")
+public class FirstTryAuto extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -83,21 +115,25 @@ public class RedCaroRetry extends LinearOpMode {
 
         waitForStart();
 
-        DriveForward(.85);
-        sleep(800);
-        turnLeft(.3);
-        sleep(700);
-        DriveForward(1);
-        sleep(460);
-        turnLeft(.225);
-        sleep(1220);
-        DriveForward(.35);
-        sleep(2490);
+        DriveForward(.75);
+        sleep(1190);
+        turnRight(.5);
+        sleep(480);
+        DriveForward(.5);
+        sleep(270);
         stopRobot();
-        carouselWheel.setPower(1);
-        sleep(2750);
-        DriveForward(-80);
-        sleep(350);
+        sleep(4000);
+        turnAround();
+        turnRight(.5);
+        sleep(250);
+        DriveForward(1);
+        sleep(800);
+        turnLeft(.5);
+        sleep(500);
+        DriveForward(.8);
+        sleep(1000);
+        carousel(1);
+        sleep(1000);
 
        /* turnRight(.6);
         sleep(755);
