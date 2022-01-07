@@ -87,10 +87,10 @@ public class RedCaroCheck extends LinearOpMode {
         sleep(700);
         DriveForward(1);
         sleep(460);
-        turnLeft(.225);
+        turnLeft(.25);
         sleep(1220);
         DriveForward(.35);
-        sleep(2490);
+        sleep(2545);
         stopRobot();
         carouselWheel.setPower(1);
         sleep(2750);

@@ -6,9 +6,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-//autonomous mode for blue side closest to warehouse, turns to left and goes straight into warehouse
-@Autonomous(name="Auto BlueStraight2WH", group="Auto")
-public class BlueG2WH extends LinearOpMode {
+
+//first attempt at actual autonomous mode
+
+@Autonomous(name="Auto BlueForwardCaro", group="Auto")
+public class BlueCaroForward extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -81,10 +83,17 @@ public class BlueG2WH extends LinearOpMode {
 
         waitForStart();
 
-        //turns left to go towards warehouse. drives forward at full power for 1.5 seconds
-        turnLeft(.46);
-        sleep(490);
-        DriveForward(1);
-        sleep(1700);
+        DriveForward(.65);
+        sleep(300);
+        DriveForward(.45);
+        sleep(380);
+        stopRobot();
+        carouselWheel.setPower(-1);
+        sleep(3000);
+        turnLeft(1);
+        sleep(400);
+        DriveForward(.75);
+        sleep(750);
+
     }
 }

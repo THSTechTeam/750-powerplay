@@ -82,9 +82,9 @@ public class RedG2WH extends LinearOpMode {
         waitForStart();
 
         //turns right to go towards warehouse. drives forward at full power for 1.5 seconds
-        turnRight(1);
-        sleep(500);
+        turnRight(.7);
+        sleep(480);
         DriveForward(1);
-        sleep(1500);
+        sleep(1250);
     }
 }

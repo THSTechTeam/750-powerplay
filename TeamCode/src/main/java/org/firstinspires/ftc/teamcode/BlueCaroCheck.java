@@ -85,10 +85,10 @@ public class BlueCaroCheck extends LinearOpMode {
 
         DriveForward(.6);
         sleep(400);
-        turnRight(.85);
+        turnRight(1);
         sleep(400);
         DriveForward(.5);
-        sleep(2000);
+        sleep(1700);
         stopRobot();
         carouselWheel.setPower(-1);
         sleep(2750);
