@@ -88,7 +88,7 @@ public class BlueCaroForward extends LinearOpMode {
         DriveForward(.45);
         sleep(380);
         stopRobot();
-        carouselWheel.setPower(-1);
+        carouselWheel.setPower(1);
         sleep(3000);
         turnLeft(1);
         sleep(400);
