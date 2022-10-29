@@ -57,13 +57,21 @@ public class DriveMotorDiagnostic extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        gamepadController.update();
+        
         // Initialize motors.
-        DcMotor frontLeft  = hardwareMap.dcMotor.get("motorFrontLeft");
-        DcMotor backLeft   = hardwareMap.dcMotor.get("motorBackLeft");
-        DcMotor frontRight = hardwareMap.dcMotor.get("motorFrontRight");
-        DcMotor backRight  = hardwareMap.dcMotor.get("motorBackRight");
+        DcMotor frontLeft  = hardwareMap.get(DcMotor.class, "motorFrontLeft");
+        DcMotor frontRight = hardwareMap.get(DcMotor.class, "motorFrontRight");
+        DcMotor backLeft   = hardwareMap.get(DcMotor.class, "motorBackLeft");
+        DcMotor backRight  = hardwareMap.get(DcMotor.class, "motorBackRight");
 
-        while (!opModeIsActive()) {
+        waitForStart();
+
+        if (isStopRequested()) {
+            return;
+        }
+
+        while (opModeIsActive()) {
             // If a pressed spin front left.
             if (gamepadController.isPressedX()) {
                 frontLeft.setPower(MotorPowerFactors.lowDrive);
