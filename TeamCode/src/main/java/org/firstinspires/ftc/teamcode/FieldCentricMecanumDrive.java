@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
+
+
 @TeleOp(name="Field Centric Mecanum Drive", group="TeleOp")
 public class FieldCentricMecanumDrive extends LinearOpMode {
     private DcMotor motorFrontLeft = null;
@@ -18,6 +20,20 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
     private Servo grabberLeft = null;
     private Servo grabberRight = null;
     private Servo servoPivot = null;
+
+    /** Change these values to modify motor/servo positions and speeds ****************************/
+
+    private static final int LIFT_BOTTOM_POSITION = 0;
+    private static final int LIFT_TOP_POSITION = 5000;
+    private static final double LIFT_SPEED = 0.5;
+
+    private static final double PIVOT_FRONT_POSITION = 0;
+    private static final double PIVOT_BACK_POSITION = 1;
+
+    private static final double GRABBER_OPEN_POSITION = 0;
+    private static final double GRABBER_CLOSED_POSITION = 1;
+
+    /**********************************************************************************************/
 
     private final double lowPowerFactor = 0.3;
     private final double highPowerFactor = 0.75;
@@ -69,39 +85,57 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
-                telemetry.addData("Currently at", " at %7d",
-                        motorLift.getCurrentPosition());
+                telemetry.addData("Currently at", " at %7d", motorLift.getCurrentPosition());
                 telemetry.update();
 
-                if (gamepad1.x && !gamepad1.y) {
-                   // Display it for the driver.
-                    motorLift.setTargetPosition(5000);
+            /** Lift Code *************************************************************************/
+
+                // Lift to top
+                if (gamepad1.y && !gamepad1.x) {
+                    motorLift.setTargetPosition(LIFT_TOP_POSITION);
                     motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    motorLift.setPower(0.5);
-                } else if (gamepad1.y && !gamepad1.x) {
-                    motorLift.setTargetPosition(0);
+                    motorLift.setPower(LIFT_SPEED);
+                }
+                // Return lift to bottom
+                else if (gamepad1.x && !gamepad1.y) {
+                    motorLift.setTargetPosition(LIFT_BOTTOM_POSITION);
                     motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    motorLift.setPower(0.5);
+                    motorLift.setPower(LIFT_SPEED);
+                }
+                // If neither are pressed, just stop for now
+                else {
+                    motorLift.setPower(0);
                 }
 
-                   if (gamepad1.dpad_left && !gamepad1.dpad_right){
-                       servoPivot.setPosition(0);
-                } else if(gamepad1.dpad_right && !gamepad1.dpad_left){
-                       servoPivot.setPosition(1);
+            /** Pivot Code ************************************************************************/
+
+                // Pivot to front
+                if (gamepad1.dpad_left && !gamepad1.dpad_right){
+                    servoPivot.setPosition(PIVOT_FRONT_POSITION);
                 }
+                // Pivot to back
+                else if(gamepad1.dpad_right && !gamepad1.dpad_left){
+                    servoPivot.setPosition(PIVOT_BACK_POSITION);
+                }
+
+           /** Grabber Code ***********************************************************************/
 
                 telemetry.addData("grabberLeft Position", "%.2f", grabberLeft.getPosition());
                 telemetry.addData("grabberRight Position", "%.2f", grabberRight.getPosition());
                 telemetry.update();
+
+                // Open grabber
                 if(gamepad1.left_bumper && !gamepad1.right_bumper) {
-                    grabberLeft.setPosition(0);
-                    grabberRight.setPosition(0);
+                    grabberLeft.setPosition(GRABBER_OPEN_POSITION);
+                    grabberRight.setPosition(GRABBER_OPEN_POSITION);
                 }
+                // Close grabber
                 else if(gamepad1.right_bumper && !gamepad1.left_bumper) {
-                    grabberLeft.setPosition(1.0);
-                    grabberRight.setPosition(1.0);
+                    grabberLeft.setPosition(GRABBER_CLOSED_POSITION);
+                    grabberRight.setPosition(GRABBER_CLOSED_POSITION);
                 }
 
+            /** Drive Code ************************************************************************/
 
             // 4097 driver station assignees controller to gamepad2 by default
             final double y = -gamepad1.left_stick_y; // reversed

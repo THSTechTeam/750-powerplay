@@ -12,30 +12,30 @@ public class ServoTest extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     private Servo grabberLeft = null;
-    private Servo grabberRight = null;
+    //private Servo grabberRight = null;
 
     @Override
     public void runOpMode() {
         grabberLeft = hardwareMap.get(Servo.class, "grabberLeft");
-        grabberRight = hardwareMap.get(Servo.class, "grabberRight");
+        //grabberRight = hardwareMap.get(Servo.class, "grabberRight");
 
         grabberLeft.setDirection(Servo.Direction.FORWARD);
-        grabberRight.setDirection(Servo.Direction.FORWARD);
+        //grabberRight.setDirection(Servo.Direction.FORWARD);
 
         waitForStart();
         runtime.reset();
 
         while (opModeIsActive()) {
             telemetry.addData("grabberLeft Position", "%.2f", grabberLeft.getPosition());
-            telemetry.addData("grabberRight Position", "%.2f", grabberRight.getPosition());
+            //telemetry.addData("grabberRight Position", "%.2f", grabberRight.getPosition());
             telemetry.update();
             if(gamepad1.left_bumper && !gamepad1.right_bumper) {
                 grabberLeft.setPosition(0);
-                grabberRight.setPosition(0);
+                //grabberRight.setPosition(0);
             }
             else if(gamepad1.right_bumper && !gamepad1.left_bumper) {
                 grabberLeft.setPosition(1.0);
-                grabberRight.setPosition(1.0);
+                //grabberRight.setPosition(1.0);
             }
         }
 
