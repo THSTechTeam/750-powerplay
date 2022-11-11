@@ -8,8 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
-
-
 @TeleOp(name="Field Centric Mecanum Drive", group="TeleOp")
 public class FieldCentricMecanumDrive extends LinearOpMode {
     private DcMotor motorFrontLeft = null;
@@ -82,9 +80,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
             return;
         }
 
-
-        if (opModeIsActive()) {
-            while (opModeIsActive()) {
+        while (opModeIsActive()) {
                 telemetry.addData("Currently at", " at %7d", motorLift.getCurrentPosition());
                 telemetry.update();
 
@@ -114,7 +110,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
                     servoPivot.setPosition(PIVOT_FRONT_POSITION);
                 }
                 // Pivot to back
-                else if(gamepad1.dpad_right && !gamepad1.dpad_left){
+                else if (gamepad1.dpad_right && !gamepad1.dpad_left){
                     servoPivot.setPosition(PIVOT_BACK_POSITION);
                 }
 
@@ -125,12 +121,12 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
                 telemetry.update();
 
                 // Open grabber
-                if(gamepad1.left_bumper && !gamepad1.right_bumper) {
+                if (gamepad1.left_bumper && !gamepad1.right_bumper) {
                     grabberLeft.setPosition(GRABBER_OPEN_POSITION);
                     grabberRight.setPosition(GRABBER_OPEN_POSITION);
                 }
                 // Close grabber
-                else if(gamepad1.right_bumper && !gamepad1.left_bumper) {
+                else if (gamepad1.right_bumper && !gamepad1.left_bumper) {
                     grabberLeft.setPosition(GRABBER_CLOSED_POSITION);
                     grabberRight.setPosition(GRABBER_CLOSED_POSITION);
                 }
@@ -143,11 +139,11 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
             final double rx = gamepad1.right_stick_x;
 
             // TODO: Brandon Note - IMU Code broken on vertical hubs
-//            final double botHeading = imu.getAngularOrientation().firstAngle;
+            // final double botHeading = imu.getAngularOrientation().firstAngle;
 
             // x / y offsets
-//            final double rotY = y * Math.cos(botHeading) + x * Math.sin(botHeading);
-//            final double rotX = -y * Math.sin(botHeading) + x * Math.cos(botHeading);
+            // final double rotY = y * Math.cos(botHeading) + x * Math.sin(botHeading);
+            // final double rotX = -y * Math.sin(botHeading) + x * Math.cos(botHeading);
             final double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
 
             double[] motorPowers = {
@@ -169,9 +165,8 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
             motorBackRight.setPower(motorPowers[3]);
 
             idle();
-
-            }
-            motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
+
+        motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 }
