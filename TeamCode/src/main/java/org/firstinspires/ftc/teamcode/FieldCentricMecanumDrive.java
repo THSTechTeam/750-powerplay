@@ -25,7 +25,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
         protected void update() {
             try {
                 previous.copy(gamepad);
-                gamepad.copy(gamepad1);
+                gamepad.copy(gamepad2);
             } catch (RobotCoreException e) {
                 // Swallow exception, gamepad1 should always be valid.
             }
@@ -55,7 +55,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
             return MotorPowerFactors.lowDrive;
         }
     }
-
+    
     private final GamepadController gamepadController = new GamepadController();
 
     @Override
@@ -71,14 +71,14 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
         // Reverse left side motors.
         // TODO: Need to correct for 750 motor orientation.
-        mecanumMotors[0].setDirection(DcMotorSimple.Direction.REVERSE);
         mecanumMotors[1].setDirection(DcMotorSimple.Direction.REVERSE);
+        // mecanumMotors[3].setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Retrieve imu from hardware map.
-        BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "imu");
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-        imu.initialize(parameters);
+        // BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "imu");
+        // BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        // parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        // imu.initialize(parameters);
 
         waitForStart();
 
@@ -89,24 +89,16 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
         while (opModeIsActive()) {
             gamepadController.update();
 
-            // TODO: Check if current reversed sticks are correct.
             final double ly = -gamepadController.gamepad.left_stick_y; // reversed
-            final double lx = -gamepadController.gamepad.left_stick_x; // reversed
+            final double lx = gamepadController.gamepad.left_stick_x;
             final double rx = gamepadController.gamepad.right_stick_x;
-
-            // TODO: Check if the control hub being mounted vertically changes this at all.
-            final double botHeading = imu.getAngularOrientation().firstAngle;
-
-            // Adjust the controller input by the robot's heading.
-            final double adjustedLy  = ly * Math.cos(botHeading) + lx * Math.sin(botHeading);
-            final double adjustedLx  = -ly * Math.sin(botHeading) + lx * Math.cos(botHeading);
             final double denominator = Math.max(Math.abs(ly) + Math.abs(lx) + Math.abs(rx), 1);
 
             final double[] motorPowers = {
-                (adjustedLy + adjustedLx + rx) / denominator, // front left
-                (adjustedLy - adjustedLx + rx) / denominator, // back left
-                (adjustedLy - adjustedLx - rx) / denominator, // front right
-                (adjustedLy + adjustedLx - rx) / denominator, // back right
+                (ly + lx + rx) / denominator, // front left
+                (ly - lx + rx) / denominator, // back left
+                (ly - lx - rx) / denominator, // front right
+                (ly + lx - rx) / denominator, // back right
             };
 
             driveMotorPowerFactor = getDrivePowerFactor(driveMotorPowerFactor);

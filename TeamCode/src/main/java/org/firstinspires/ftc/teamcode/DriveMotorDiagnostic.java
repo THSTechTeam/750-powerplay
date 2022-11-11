@@ -24,7 +24,7 @@ public class DriveMotorDiagnostic extends LinearOpMode {
         protected void update() {
             try {
                 previous.copy(gamepad);
-                gamepad.copy(gamepad1);
+                gamepad.copy(gamepad2);
             } catch (RobotCoreException e) {
                 // Swallow exception, gamepad1 should always be valid.
             }
@@ -37,7 +37,7 @@ public class DriveMotorDiagnostic extends LinearOpMode {
         }
 
         public boolean isPressedA() {
-            return gamepad.a;
+            return gamepad.a && !previous.a;
         }
 
         public boolean isPressedB() {
@@ -60,7 +60,7 @@ public class DriveMotorDiagnostic extends LinearOpMode {
         gamepadController.update();
         
         // Initialize motors.
-        DcMotor frontLeft  = hardwareMap.get(DcMotor.class, "motorFrontLeft");
+        DcMotor frontLeft  = hardwareMap.get(DcMotor.class, "motorFrontLeft"); // correct
         DcMotor frontRight = hardwareMap.get(DcMotor.class, "motorFrontRight");
         DcMotor backLeft   = hardwareMap.get(DcMotor.class, "motorBackLeft");
         DcMotor backRight  = hardwareMap.get(DcMotor.class, "motorBackRight");
@@ -71,34 +71,46 @@ public class DriveMotorDiagnostic extends LinearOpMode {
             return;
         }
 
+//        frontRight.setPower(0.3);
+        backLeft.setPower(0.3);
+
         while (opModeIsActive()) {
-            // If a pressed spin front left.
-            if (gamepadController.isPressedX()) {
-                frontLeft.setPower(MotorPowerFactors.lowDrive);
-            } else {
-                frontLeft.setPower(0);
-            }
+            // telemetry.addData("A", gamepadController.isPressedA());
+            
 
-            // If b pressed spin back left.
-            if (gamepadController.isPressedA()) {
-                backLeft.setPower(MotorPowerFactors.lowDrive);
-            } else {
-                backLeft.setPower(0);
-            }
+            // // If a pressed spin front left.
+            // if (gamepadController.isPressedX()) {
+            //     frontLeft.setPower(MotorPowerFactors.lowDrive);
+            // } 
+            // // else {
+            // //     frontLeft.setPower(0);
+            // // }
 
-            // If x pressed spin front right.
-            if (gamepadController.isPressedB()) {
-                frontRight.setPower(MotorPowerFactors.lowDrive);
-            } else {
-                frontRight.setPower(0);
-            }
+            // // If b pressed spin back left.
+            // if (gamepadController.isPressedA()) {
+            //     backLeft.setPower(MotorPowerFactors.lowDrive);
+            // } 
+            // // else {
+            // //     backLeft.setPower(0);
+            // // }
 
-            // If y pressed spin back right.
-            if (gamepadController.isPressedY()) {
-                backRight.setPower(MotorPowerFactors.lowDrive);
-            } else {
-                backRight.setPower(0);
-            }
+            // // If x pressed spin front right.
+            // if (gamepadController.isPressedB()) {
+            //     frontRight.setPower(MotorPowerFactors.lowDrive);
+            // } 
+            // // else {
+            // //     frontRight.setPower(0);
+            // // }
+
+            // // If y pressed spin back right.
+            // if (gamepadController.isPressedY()) {
+            //     backRight.setPower(MotorPowerFactors.lowDrive);
+            // } 
+            // // else {
+            // //     backRight.setPower(0);
+            // // }
+
+            telemetry.update();
         }
     }
 }
