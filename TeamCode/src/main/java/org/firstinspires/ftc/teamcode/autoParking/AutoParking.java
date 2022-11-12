@@ -102,7 +102,7 @@ public class AutoParking extends LinearOpMode {
     private void strafeLeftOneTile(DcMotor[] mecanumMotors) {
         // NOTE: Currently drives without the encoder.
         // Configured for Rev Robotics HD Hex Motor 20:1
-        final double drivePower = 0.15;
+        final double drivePower = 0.25;
 
         mecanumMotors[0].setPower(-drivePower);
         mecanumMotors[1].setPower(drivePower);
@@ -119,7 +119,7 @@ public class AutoParking extends LinearOpMode {
     private void strafeRightOneTile(DcMotor[] mecanumMotors) {
         // NOTE: Currently drives without the encoder.
         // Configured for Rev Robotics HD Hex Motor 20:1
-        final double drivePower = 0.15;
+        final double drivePower = 0.25;
 
         mecanumMotors[0].setPower(drivePower);
         mecanumMotors[1].setPower(-drivePower);
@@ -142,9 +142,8 @@ public class AutoParking extends LinearOpMode {
             hardwareMap.get(DcMotor.class, "motorBackRight")
         };
 
-        mecanumMotors[0].setDirection(DcMotorSimple.Direction.REVERSE);
+        // Invert necessary motors. Looks weird because of the orientation of the 750 drive motors.
         mecanumMotors[1].setDirection(DcMotorSimple.Direction.REVERSE);
-        mecanumMotors[3].setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Init IMU. Used for resetting the heading at the end of the parking sequence.
         imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -232,19 +231,26 @@ public class AutoParking extends LinearOpMode {
         }
 
         // TODO: Currently can't reset heading due to the IMU's orientation on the 750 bot.
-        if (tagOfInterest.id == LEFT_TAG_ID) {
-            // Drive to the Left Zone.
-            driveForwardOneTile(mecanumMotors);
-            // resetHeading(mecanumMotors);
-            strafeLeftOneTile(mecanumMotors);
-        } else if (tagOfInterest.id == CENTER_TAG_ID) {
-            // Drive to the Center Zone.
-            driveForwardOneTile(mecanumMotors);
-        } else if (tagOfInterest.id == RIGHT_TAG_ID) {
-            // Drive to the Right Zone.
-            driveForwardOneTile(mecanumMotors);
-            // resetHeading(mecanumMotors);
-            strafeRightOneTile(mecanumMotors);
+        try {
+            if (tagOfInterest.id == LEFT_TAG_ID) {
+                // Drive to the Left Zone.
+                driveForwardOneTile(mecanumMotors);
+                // resetHeading(mecanumMotors);
+                strafeLeftOneTile(mecanumMotors);
+            } else if (tagOfInterest.id == CENTER_TAG_ID) {
+                // Drive to the Center Zone.
+                driveForwardOneTile(mecanumMotors);
+            } else if (tagOfInterest.id == RIGHT_TAG_ID) {
+                // Drive to the Right Zone.
+                driveForwardOneTile(mecanumMotors);
+                // resetHeading(mecanumMotors);
+                strafeRightOneTile(mecanumMotors);
+            }
+        } catch (NullPointerException e) {
+            // If the tagOfInterest is null, then the tag was never seen.
+            // This is a safety net to prevent the robot from crashing.
+            telemetry.addLine("Preventing robot from crashing; already drove to parking zone 2.");
+            telemetry.update();
         }
 
         // resetHeading(mecanumMotors);
