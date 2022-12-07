@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -64,7 +64,7 @@ public class AprilTagDetectionTest extends LinearOpMode {
                 boolean tagFound = false;
 
                 for (AprilTagDetection tag : currentDetections) {
-                    if (tag.id == LEFT_TAG_ID || tag.id == CENTER_TAG_ID || tag.id == RIGHT_TAG_ID) {
+                    if (tag != null && (tag.id == LEFT_TAG_ID || tag.id == CENTER_TAG_ID || tag.id == RIGHT_TAG_ID)) {
                         tagOfInterest = tag;
                         tagFound = true;
                         break;
@@ -109,12 +109,12 @@ public class AprilTagDetectionTest extends LinearOpMode {
             telemetry.update();
         }
 
-        if (tagOfInterest.id == LEFT_TAG_ID || tagOfInterest == null) {
+        if (tagOfInterest != null && (tagOfInterest.id == LEFT_TAG_ID || tagOfInterest == null)) {
             // Drive to the Left Zone.
             // This is the default behavior in case the tag is never seen and something goes wrong.
-        } else if (tagOfInterest.id == CENTER_TAG_ID) {
+        } else if (tagOfInterest != null && tagOfInterest.id == CENTER_TAG_ID) {
             // Drive to the Center Zone.
-        } else if (tagOfInterest.id == RIGHT_TAG_ID) {
+        } else if (tagOfInterest != null && tagOfInterest.id == RIGHT_TAG_ID) {
             // Drive to the Right Zone.
         }
 
@@ -125,7 +125,9 @@ public class AprilTagDetectionTest extends LinearOpMode {
     }
 
     private void tagToTelemetry(AprilTagDetection detection) {
-        telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
+        if(detection != null) {
+            telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
+        }
         telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
         telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
         telemetry.addLine(String.format("Translation Z: %.2f feet", detection.pose.z*FEET_PER_METER));
