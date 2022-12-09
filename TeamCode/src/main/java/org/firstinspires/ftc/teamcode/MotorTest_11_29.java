@@ -3,41 +3,48 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="Servo Test 11/1", group="Teleop")
-public class ServoTest extends LinearOpMode {
+@TeleOp(name="Motor Test 11/29", group="Teleop")
+public class MotorTest_11_29 extends LinearOpMode {
+
+    private static final int LIFT_BOTTOM_POSITION = 0;
+    private static final int LIFT_LEVEL_1 = 1450;//2900;
+    private static final int LIFT_LEVEL_2 = 2300;//4600;
+    private static final int LIFT_LEVEL_3 = 3250;//6500;
+    private static final double LIFT_SPEED = 1;
 
     private ElapsedTime runtime = new ElapsedTime();
-
-    private Servo grabberLeft = null;
-    //private Servo grabberRight = null;
+    private DcMotor motorLift = null;
 
     @Override
     public void runOpMode() {
-        grabberLeft = hardwareMap.get(Servo.class, "grabberLeft");
-        //grabberRight = hardwareMap.get(Servo.class, "grabberRight");
+        motorLift = hardwareMap.get(DcMotor.class, "motorLift");
 
-        grabberLeft.setDirection(Servo.Direction.FORWARD);
-        //grabberRight.setDirection(Servo.Direction.FORWARD);
+        motorLift.setDirection(DcMotor.Direction.FORWARD);
 
         waitForStart();
         runtime.reset();
 
         while (opModeIsActive()) {
-            telemetry.addData("grabberLeft Position", "%.2f", grabberLeft.getPosition());
-            //telemetry.addData("grabberRight Position", "%.2f", grabberRight.getPosition());
-            telemetry.update();
-            if(gamepad1.left_bumper && !gamepad1.right_bumper) {
-                grabberLeft.setPosition(0);
-                //grabberRight.setPosition(0);
+            //telemetry.addData("grabberLeft Position", "%.2f", motorLift.get);
+            //telemetry.update();
+            // Lift to top
+            if (gamepad1.y && !gamepad1.x) {
+                motorLift.setTargetPosition(LIFT_LEVEL_3);
+                motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motorLift.setPower(LIFT_SPEED);
             }
-            else if(gamepad1.right_bumper && !gamepad1.left_bumper) {
-                grabberLeft.setPosition(1.0);
-                //grabberRight.setPosition(1.0);
+            // Return lift to bottom
+            else if (gamepad1.x && !gamepad1.y) {
+                motorLift.setTargetPosition(LIFT_BOTTOM_POSITION);
+                motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motorLift.setPower(LIFT_SPEED);
             }
+            // If neither are pressed, just stop for now
+            /*else {
+                motorLift.setPower(0);
+            }*/
         }
-
     }
 }

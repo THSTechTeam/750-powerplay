@@ -24,8 +24,10 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
     /** Change these values to modify motor/servo positions and speeds ****************************/
 
     private static final int LIFT_BOTTOM_POSITION = 0;
-    private static final int LIFT_TOP_POSITION = 5000;
-    private static final double LIFT_SPEED = 0.5;
+    private static final int LIFT_LEVEL_1 = 2900;
+    private static final int LIFT_LEVEL_2 = 4600;
+    private static final int LIFT_LEVEL_3 = 6500;
+    private static final double LIFT_SPEED = 1;
 
     private static final double PIVOT_FRONT_POSITION = 0;
     private static final double PIVOT_BACK_POSITION = 1;
@@ -38,6 +40,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
     private final double lowPowerFactor = 0.3;
     private final double highPowerFactor = 0.75;
 
+    private int currentLiftLevel = 0;
     private double motorPowerFactor = lowPowerFactor;
 
     private double getPowerFactor(final double previousPowerFactor) {
@@ -90,22 +93,30 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
             /** Lift Code *************************************************************************/
 
+                if(gamepad2.x) {
+
+                }
+                else if(gamepad2.y) {
+
+                }
+                else if(gamepad2.b) {
+
+                }
+                else if(gamepad2.a) {
+
+                }
                 // Lift to top
-                if (gamepad1.y && !gamepad1.x) {
-                    motorLift.setTargetPosition(LIFT_TOP_POSITION);
+                /*if (gamepad2.x) {
+                    motorLift.setTargetPosition(currentLiftLevel);
                     motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     motorLift.setPower(LIFT_SPEED);
                 }
                 // Return lift to bottom
-                else if (gamepad1.x && !gamepad1.y) {
+                else if (gamepad2.x && !gamepad2.y) {
                     motorLift.setTargetPosition(LIFT_BOTTOM_POSITION);
                     motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     motorLift.setPower(LIFT_SPEED);
-                }
-                // If neither are pressed, just stop for now
-                else {
-                    motorLift.setPower(0);
-                }
+                }*/
 
             /** Pivot Code ************************************************************************/
 
