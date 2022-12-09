@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -12,32 +13,34 @@ public class ServoTest extends LinearOpMode {
     private static final double PIVOT_FRONT_POSITION = 1;
     private static final double PIVOT_BACK_POSITION = 0.25;
 
-    private static final double GRABBER_OPEN_POSITION = 0;
-    private static final double GRABBER_CLOSED_POSITION = 1.0;
+    private static final double GRABBER_POWER = 1;
+
+    //private static final double GRABBER_OPEN_POSITION = 0;
+    //private static final double GRABBER_CLOSED_POSITION = 1.0;
 
     private ElapsedTime runtime = new ElapsedTime();
 
     private Servo servoPivot = null;
-    private Servo grabberLeft = null;
-    private Servo grabberRight = null;
+    private CRServo grabberLeft = null;
+    private CRServo grabberRight = null;
 
     @Override
     public void runOpMode() {
         servoPivot = hardwareMap.get(Servo.class, "servoPivot");
-        grabberLeft = hardwareMap.get(Servo.class, "grabberLeft");
-        grabberRight = hardwareMap.get(Servo.class, "grabberRight");
+        grabberLeft = hardwareMap.get(CRServo.class, "grabberLeft");
+        grabberRight = hardwareMap.get(CRServo.class, "grabberRight");
 
         servoPivot.setDirection(Servo.Direction.FORWARD);
-        grabberLeft.setDirection(Servo.Direction.FORWARD);
-        grabberRight.setDirection(Servo.Direction.REVERSE);
+        grabberLeft.setDirection(CRServo.Direction.FORWARD);
+        grabberRight.setDirection(CRServo.Direction.REVERSE);
 
         waitForStart();
         runtime.reset();
 
         while (opModeIsActive()) {
-            telemetry.addData("servoPivot Position", "%.2f", servoPivot.getPosition());
-            telemetry.addData("grabberLeft Position", "%.2f", grabberLeft.getPosition());
-            telemetry.addData("grabberRight Position", "%.2f", grabberRight.getPosition());
+            //telemetry.addData("servoPivot Position", "%.2f", servoPivot.getPosition());
+            //telemetry.addData("grabberLeft Position", "%.2f", grabberLeft.getPosition());
+            //telemetry.addData("grabberRight Position", "%.2f", grabberRight.getPosition());
             //telemetry.addData("grabberLeft Position", "%.2f", grabberLeft.getPosition());
             //telemetry.addData("grabberRight Position", "%.2f", grabberRight.getPosition());
             telemetry.update();
@@ -51,14 +54,22 @@ public class ServoTest extends LinearOpMode {
 
             // Open grabber
             if(gamepad1.left_bumper && !gamepad1.right_bumper) {
-                grabberLeft.setPosition(GRABBER_OPEN_POSITION);
-                grabberRight.setPosition(GRABBER_OPEN_POSITION);
+              //  grabberLeft.setPosition(GRABBER_OPEN_POSITION);
+              //  grabberRight.setPosition(GRABBER_OPEN_POSITION);
+                grabberLeft.setPower(GRABBER_POWER);
+                grabberRight.setPower(GRABBER_POWER);
             }
             // Close grabber
             else if(gamepad1.right_bumper && !gamepad1.left_bumper) {
-                grabberLeft.setPosition(GRABBER_CLOSED_POSITION);
-                grabberRight.setPosition(GRABBER_CLOSED_POSITION);
+               // grabberLeft.setPosition(GRABBER_CLOSED_POSITION);
+                // grabberRight.setPosition(GRABBER_CLOSED_POSITION);
+                grabberLeft.setPower(-1 * GRABBER_POWER);
+                grabberRight.setPower(-1 * GRABBER_POWER);
+            }else {
+                grabberLeft.setPower(0);
+                grabberRight.setPower(0);
             }
+
             /*if(gamepad1.left_bumper && !gamepad1.right_bumper) {
                 grabberLeft.setPosition(0);
                 //grabberRight.setPosition(0);
