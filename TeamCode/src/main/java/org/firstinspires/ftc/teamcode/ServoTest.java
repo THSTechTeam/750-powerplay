@@ -44,23 +44,23 @@ public class ServoTest extends LinearOpMode {
             //telemetry.addData("grabberLeft Position", "%.2f", grabberLeft.getPosition());
             //telemetry.addData("grabberRight Position", "%.2f", grabberRight.getPosition());
             telemetry.update();
-            if (gamepad1.dpad_left && !gamepad1.dpad_right){
+            if (gamepad2.dpad_left && !gamepad2.dpad_right){
                 servoPivot.setPosition(PIVOT_FRONT_POSITION);
             }
             // Pivot to back
-            else if(gamepad1.dpad_right && !gamepad1.dpad_left) {
+            else if(gamepad2.dpad_right && !gamepad2.dpad_left) {
                 servoPivot.setPosition(PIVOT_BACK_POSITION);
             }
 
             // Open grabber
-            if(gamepad1.left_bumper && !gamepad1.right_bumper) {
+            if(gamepad2.left_bumper && !gamepad2.right_bumper) {
               //  grabberLeft.setPosition(GRABBER_OPEN_POSITION);
               //  grabberRight.setPosition(GRABBER_OPEN_POSITION);
                 grabberLeft.setPower(GRABBER_POWER);
                 grabberRight.setPower(GRABBER_POWER);
             }
             // Close grabber
-            else if(gamepad1.right_bumper && !gamepad1.left_bumper) {
+            else if(gamepad2.right_bumper && !gamepad2.left_bumper) {
                // grabberLeft.setPosition(GRABBER_CLOSED_POSITION);
                 // grabberRight.setPosition(GRABBER_CLOSED_POSITION);
                 grabberLeft.setPower(-1 * GRABBER_POWER);

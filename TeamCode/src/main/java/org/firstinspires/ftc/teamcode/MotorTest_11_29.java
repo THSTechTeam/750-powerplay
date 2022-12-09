@@ -49,6 +49,13 @@ public class MotorTest_11_29 extends LinearOpMode {
                 motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motorLift.setPower(LIFT_SPEED);
             }
+
+            if(gamepad2.dpad_up && !gamepad2.dpad_down) {
+                motorLift.setPower(1);
+            }
+            else if(gamepad2.dpad_down && !gamepad2.dpad_up) {
+                motorLift.setPower(0);
+            }
         }
     }
 }
