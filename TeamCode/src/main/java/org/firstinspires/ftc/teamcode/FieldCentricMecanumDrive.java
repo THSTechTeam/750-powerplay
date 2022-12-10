@@ -26,7 +26,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
     private static final int LIFT_LEVEL_0 = 0;
     private static final int LIFT_LEVEL_1 = 1450;//2900;
     private static final int LIFT_LEVEL_2 = 2300;//4600;
-    private static final int LIFT_LEVEL_3 = 3250;//6500;
+    private static final int LIFT_LEVEL_3 = 3500;//6500;
     private static final double LIFT_SPEED = 1;
 
     private static final double PIVOT_FRONT_POSITION = 1;
@@ -72,7 +72,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
        grabberRight.setDirection(CRServo.Direction.REVERSE);
 
         // reverse left side motors
-       motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+       // motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: Brandon Note - IMU Code broken on vertical hubs
@@ -179,7 +179,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
             // 4097 driver station assignees controller to gamepad2 by default
             final double y = -gamepad1.left_stick_y; // reversed
-            final double x = -(gamepad1.left_stick_x * 1.0); // imperfect strafing fix & reversed
+            final double x = (gamepad1.left_stick_x * 1.0); // imperfect strafing fix & reversed
             final double rx = gamepad1.right_stick_x;
 
             // TODO: Brandon Note - IMU Code broken on vertical hubs
