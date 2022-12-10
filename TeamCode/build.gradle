@@ -25,3 +25,9 @@ dependencies {
     //implementation 'org.openftc:easyopencv:1.5.2'
     //implementation 'org.openftc:apriltag:1.1.0'
 }
+
+// Needed for April Tag Computer Vision.
+dependencies {
+    implementation 'org.openftc:easyopencv:1.5.2'
+    implementation 'org.openftc:apriltag:1.1.0'
+}
