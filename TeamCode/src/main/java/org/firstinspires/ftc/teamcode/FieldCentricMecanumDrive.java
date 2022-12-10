@@ -17,23 +17,25 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
     private DcMotor motorBackLeft = null;
     private DcMotor motorBackRight = null;
     private DcMotor motorLift = null;
-    private Servo grabberLeft = null;
-    private Servo grabberRight = null;
+    private CRServo grabberLeft = null;
+    private CRServo grabberRight = null;
     private Servo servoPivot = null;
 
     /** Change these values to modify motor/servo positions and speeds ****************************/
 
-    private static final int LIFT_BOTTOM_POSITION = 0;
-    private static final int LIFT_LEVEL_1 = 2900;
-    private static final int LIFT_LEVEL_2 = 4600;
-    private static final int LIFT_LEVEL_3 = 6500;
+    private static final int LIFT_LEVEL_0 = 0;
+    private static final int LIFT_LEVEL_1 = 1450;//2900;
+    private static final int LIFT_LEVEL_2 = 2300;//4600;
+    private static final int LIFT_LEVEL_3 = 3250;//6500;
     private static final double LIFT_SPEED = 1;
 
-    private static final double PIVOT_FRONT_POSITION = 0;
-    private static final double PIVOT_BACK_POSITION = 1;
+    private static final double PIVOT_FRONT_POSITION = 1;
+    private static final double PIVOT_BACK_POSITION = 0.25;
 
-    private static final double GRABBER_OPEN_POSITION = 0;
-    private static final double GRABBER_CLOSED_POSITION = 1;
+    private static final double GRABBER_POWER = 1;
+
+    //private static final double GRABBER_OPEN_POSITION = 0;
+    //private static final double GRABBER_CLOSED_POSITION = 1;
 
     /**********************************************************************************************/
 
@@ -62,11 +64,12 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
        motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
        motorLift = hardwareMap.dcMotor.get("motorLift");
        servoPivot = hardwareMap.servo.get("servoPivot");
-       grabberLeft = hardwareMap.get(Servo.class, "grabberLeft");
-       grabberRight = hardwareMap.get(Servo.class, "grabberRight");
+        grabberLeft = hardwareMap.get(CRServo.class, "grabberLeft");
+        grabberRight = hardwareMap.get(CRServo.class, "grabberRight");
 
-        grabberLeft.setDirection(Servo.Direction.FORWARD);
-        grabberRight.setDirection(Servo.Direction.FORWARD);
+       servoPivot.setDirection(Servo.Direction.FORWARD);
+       grabberLeft.setDirection(CRServo.Direction.FORWARD);
+       grabberRight.setDirection(CRServo.Direction.REVERSE);
 
         // reverse left side motors
        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -93,45 +96,66 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
             /** Lift Code *************************************************************************/
 
-                if(gamepad2.x) {
-
-                }
-                else if(gamepad2.y) {
-
-                }
-                else if(gamepad2.b) {
-
-                }
-                else if(gamepad2.a) {
-
-                }
-                // Lift to top
-                /*if (gamepad2.x) {
-                    motorLift.setTargetPosition(currentLiftLevel);
+                if(gamepad2.x){
+                    motorLift.setTargetPosition(LIFT_LEVEL_1);
                     motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     motorLift.setPower(LIFT_SPEED);
                 }
-                // Return lift to bottom
-                else if (gamepad2.x && !gamepad2.y) {
-                    motorLift.setTargetPosition(LIFT_BOTTOM_POSITION);
+                else if(gamepad2.y){
+                    motorLift.setTargetPosition(LIFT_LEVEL_2);
                     motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     motorLift.setPower(LIFT_SPEED);
-                }*/
+                }
+                else if(gamepad2.b){
+                    motorLift.setTargetPosition(LIFT_LEVEL_3);
+                    motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    motorLift.setPower(LIFT_SPEED);
+                }
+                else if(gamepad2.a){
+                    motorLift.setTargetPosition(LIFT_LEVEL_0);
+                    motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    motorLift.setPower(LIFT_SPEED);
+                }
+
+                if(gamepad2.dpad_up && !gamepad2.dpad_down) {
+                    motorLift.setPower(1);
+                }
+                else if(gamepad2.dpad_down && !gamepad2.dpad_up) {
+                    motorLift.setPower(0);
+                }
 
             /** Pivot Code ************************************************************************/
 
                 // Pivot to front
-                if (gamepad1.dpad_left && !gamepad1.dpad_right){
+                if (gamepad2.dpad_left && !gamepad2.dpad_right){
                     servoPivot.setPosition(PIVOT_FRONT_POSITION);
                 }
                 // Pivot to back
-                else if(gamepad1.dpad_right && !gamepad1.dpad_left){
+                else if(gamepad2.dpad_right && !gamepad2.dpad_left){
                     servoPivot.setPosition(PIVOT_BACK_POSITION);
                 }
 
            /** Grabber Code ***********************************************************************/
 
-                telemetry.addData("grabberLeft Position", "%.2f", grabberLeft.getPosition());
+                // Open grabber
+                if(gamepad2.left_bumper && !gamepad2.right_bumper) {
+                    //  grabberLeft.setPosition(GRABBER_OPEN_POSITION);
+                    //  grabberRight.setPosition(GRABBER_OPEN_POSITION);
+                    grabberLeft.setPower(GRABBER_POWER);
+                    grabberRight.setPower(GRABBER_POWER);
+                }
+                // Close grabber
+                else if(gamepad2.right_bumper && !gamepad2.left_bumper) {
+                    // grabberLeft.setPosition(GRABBER_CLOSED_POSITION);
+                    // grabberRight.setPosition(GRABBER_CLOSED_POSITION);
+                    grabberLeft.setPower(-1 * GRABBER_POWER);
+                    grabberRight.setPower(-1 * GRABBER_POWER);
+                } else {
+                    grabberLeft.setPower(0);
+                    grabberRight.setPower(0);
+                }
+
+                /*telemetry.addData("grabberLeft Position", "%.2f", grabberLeft.getPosition());
                 telemetry.addData("grabberRight Position", "%.2f", grabberRight.getPosition());
                 telemetry.update();
 
@@ -144,7 +168,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
                 else if(gamepad1.right_bumper && !gamepad1.left_bumper) {
                     grabberLeft.setPosition(GRABBER_CLOSED_POSITION);
                     grabberRight.setPosition(GRABBER_CLOSED_POSITION);
-                }
+                }*/
 
             /** Drive Code ************************************************************************/
 
