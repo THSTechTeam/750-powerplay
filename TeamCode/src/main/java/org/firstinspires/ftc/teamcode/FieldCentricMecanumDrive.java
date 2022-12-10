@@ -19,7 +19,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
     private DcMotor motorLift = null;
     private CRServo grabberLeft = null;
     private CRServo grabberRight = null;
-    private Servo servoPivot = null;
+    private CRServo servoPivot = null;
 
     /** Change these values to modify motor/servo positions and speeds ****************************/
 
@@ -63,11 +63,11 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
        motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
        motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
        motorLift = hardwareMap.dcMotor.get("motorLift");
-       servoPivot = hardwareMap.servo.get("servoPivot");
+       servoPivot = hardwareMap.get(CRServo.class, "servoPivot");
         grabberLeft = hardwareMap.get(CRServo.class, "grabberLeft");
         grabberRight = hardwareMap.get(CRServo.class, "grabberRight");
 
-       servoPivot.setDirection(Servo.Direction.FORWARD);
+       servoPivot.setDirection(CRServo.Direction.FORWARD);
        grabberLeft.setDirection(CRServo.Direction.FORWARD);
        grabberRight.setDirection(CRServo.Direction.REVERSE);
 
@@ -128,11 +128,16 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
                 // Pivot to front
                 if (gamepad2.dpad_left && !gamepad2.dpad_right){
-                    servoPivot.setPosition(PIVOT_FRONT_POSITION);
+                    servoPivot.setPower(-0.7);
+                    //servoPivot.setPosition(PIVOT_FRONT_POSITION);
                 }
                 // Pivot to back
                 else if(gamepad2.dpad_right && !gamepad2.dpad_left){
-                    servoPivot.setPosition(PIVOT_BACK_POSITION);
+                    servoPivot.setPower(0.7);
+                    //servoPivot.setPosition(PIVOT_BACK_POSITION);
+                }
+                else {
+                    servoPivot.setPower(0);
                 }
 
            /** Grabber Code ***********************************************************************/
