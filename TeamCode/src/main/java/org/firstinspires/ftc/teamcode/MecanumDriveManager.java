@@ -98,6 +98,7 @@ public class MecanumDriveManager {
         setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // TODO: Reverse any motors using DcMotor.setDirection()
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: If you do not intend to use the IMU, comment out the IMU initialization.
         // This section can add 2-3 seconds during the init phase of the robot
