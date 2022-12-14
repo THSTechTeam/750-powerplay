@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -8,8 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
-
-
+@Config
 @TeleOp(name="Field Centric Mecanum Drive", group="TeleOp")
 public class FieldCentricMecanumDrive extends LinearOpMode {
     private DcMotor motorFrontLeft = null;
@@ -23,11 +23,11 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
     /** Change these values to modify motor/servo positions and speeds ****************************/
 
-    private static final int LIFT_LEVEL_0 = 0;
-    private static final int LIFT_LEVEL_1 = 1450;//2900;
-    private static final int LIFT_LEVEL_2 = 2300;//4600;
-    private static final int LIFT_LEVEL_3 = 3250;//6500;
-    private static final double LIFT_SPEED = 1;
+    public static int LIFT_LEVEL_0 = 0;
+    public static int LIFT_LEVEL_1 = 1450;//2900;
+    public static int LIFT_LEVEL_2 = 2300;//4600;
+    public static int LIFT_LEVEL_3 = 3250;//6500;
+    public static double LIFT_SPEED = 1;
 
     private static final double PIVOT_FRONT_POSITION = 1;
     private static final double PIVOT_BACK_POSITION = 0.25;
@@ -39,13 +39,13 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
     /**********************************************************************************************/
 
-    private final double lowPowerFactor = 0.3;
-    private final double highPowerFactor = 0.75;
+    public static double lowPowerFactor = 0.35;
+    public static double highPowerFactor = 0.65;
 
     private int currentLiftLevel = 0;
     private double motorPowerFactor = lowPowerFactor;
 
-    private double getPowerFactor(final double previousPowerFactor) {
+    private double getPowerFactor(double previousPowerFactor) {
        if (gamepad1.a) {
            return lowPowerFactor;
        } else if (gamepad1.b) {
@@ -54,7 +54,6 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
            return previousPowerFactor;
        }
    }
-
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -72,7 +71,6 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
        grabberRight.setDirection(CRServo.Direction.REVERSE);
 
         // reverse left side motors
-       motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: Brandon Note - IMU Code broken on vertical hubs
@@ -82,12 +80,16 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 //        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
 //        imu.initialize(parameters);
 
-        waitForStart();
+        // The following loop replaces `waitForStart()`.
+        while (!isStarted() && !isStopRequested()) {
+            telemetry.addData("ArmMotorPosition", motorLift.getCurrentPosition());
+            telemetry.update();
+        }
+        // End of `waitForStart()` replacement.
 
         if (isStopRequested()) {
             return;
         }
-
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
