@@ -19,14 +19,14 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
     private DcMotor motorLift = null;
     private CRServo grabberLeft = null;
     private CRServo grabberRight = null;
-    private Servo servoPivot = null;
+    private CRServo servoPivot = null;
 
     /** Change these values to modify motor/servo positions and speeds ****************************/
 
     private static final int LIFT_LEVEL_0 = 0;
     private static final int LIFT_LEVEL_1 = 1450;//2900;
     private static final int LIFT_LEVEL_2 = 2300;//4600;
-    private static final int LIFT_LEVEL_3 = 3250;//6500;
+    private static final int LIFT_LEVEL_3 = 3500;//6500;
     private static final double LIFT_SPEED = 1;
 
     private static final double PIVOT_FRONT_POSITION = 1;
@@ -63,16 +63,16 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
        motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
        motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
        motorLift = hardwareMap.dcMotor.get("motorLift");
-       servoPivot = hardwareMap.servo.get("servoPivot");
+       servoPivot = hardwareMap.get(CRServo.class, "servoPivot");
         grabberLeft = hardwareMap.get(CRServo.class, "grabberLeft");
         grabberRight = hardwareMap.get(CRServo.class, "grabberRight");
 
-       servoPivot.setDirection(Servo.Direction.FORWARD);
+       servoPivot.setDirection(CRServo.Direction.FORWARD);
        grabberLeft.setDirection(CRServo.Direction.FORWARD);
        grabberRight.setDirection(CRServo.Direction.REVERSE);
 
         // reverse left side motors
-       motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+       // motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: Brandon Note - IMU Code broken on vertical hubs
@@ -128,11 +128,16 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
                 // Pivot to front
                 if (gamepad2.dpad_left && !gamepad2.dpad_right){
-                    servoPivot.setPosition(PIVOT_FRONT_POSITION);
+                    servoPivot.setPower(-0.7);
+                    //servoPivot.setPosition(PIVOT_FRONT_POSITION);
                 }
                 // Pivot to back
                 else if(gamepad2.dpad_right && !gamepad2.dpad_left){
-                    servoPivot.setPosition(PIVOT_BACK_POSITION);
+                    servoPivot.setPower(0.7);
+                    //servoPivot.setPosition(PIVOT_BACK_POSITION);
+                }
+                else {
+                    servoPivot.setPower(0);
                 }
 
            /** Grabber Code ***********************************************************************/
@@ -174,7 +179,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
             // 4097 driver station assignees controller to gamepad2 by default
             final double y = -gamepad1.left_stick_y; // reversed
-            final double x = -(gamepad1.left_stick_x * 1.0); // imperfect strafing fix & reversed
+            final double x = (gamepad1.left_stick_x * 1.0); // imperfect strafing fix & reversed
             final double rx = gamepad1.right_stick_x;
 
             // TODO: Brandon Note - IMU Code broken on vertical hubs

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+/*package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -119,9 +119,9 @@ public class AprilTagDetectionTest extends LinearOpMode {
         } else if (tagOfInterest != null && tagOfInterest.id == RIGHT_TAG_ID) {
             // Drive to the Right Zone.
         }
-
+*/
         /* You wouldn't have this in your autonomous, this is just to prevent the sample from ending */
-        while (opModeIsActive()) {
+        /*while (opModeIsActive()) {
             sleep(20);
         }
     }
@@ -137,4 +137,4 @@ public class AprilTagDetectionTest extends LinearOpMode {
         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
     }
-}
+}*/
