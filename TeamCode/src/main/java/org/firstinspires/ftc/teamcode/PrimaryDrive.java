@@ -7,10 +7,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.MecanumDriveManager.MODE;
+import org.firstinspires.ftc.teamcode.util.DriveMode;
+import org.firstinspires.ftc.teamcode.util.GamepadController;
+import org.firstinspires.ftc.teamcode.util.GamepadButton;
+import org.firstinspires.ftc.teamcode.util.MecanumDriveManager;
 
-@TeleOp(name="Field Centric Mecanum Drive", group="TeleOp")
-public class FieldCentricMecanumDrive extends LinearOpMode {
+@TeleOp(name="Primary Drive", group="TeleOp")
+public class PrimaryDrive extends LinearOpMode {
     private DcMotor motorLift = null;
     private CRServo grabberLeft = null;
     private CRServo grabberRight = null;
@@ -41,21 +44,13 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
     private int currentLiftLevel = 0;
     private double motorPowerFactor = lowPowerFactor;
 
-    private double getPowerFactor(final double previousPowerFactor) {
-       if (gamepad1.a) {
-           return lowPowerFactor;
-       } else if (gamepad1.b) {
-           return highPowerFactor;
-       } else {
-           return previousPowerFactor;
-       }
-   }
+    private GamepadController gamepadController1 = new GamepadController();
 
     @Override
     public void runOpMode() throws InterruptedException {
         // Brandon's drive code init.
         MecanumDriveManager drive = new MecanumDriveManager(hardwareMap);
-        drive.setMode(MODE.FIELD_CENTRIC);
+        drive.setMode(DriveMode.FIELD_CENTRIC);
         drive.flipY();
 
         motorLift = hardwareMap.dcMotor.get("motorLift");
@@ -76,6 +71,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
         while (opModeIsActive()) {
             telemetry.addData("Currently at", " at %7d", motorLift.getCurrentPosition());
             telemetry.update();
+            gamepadController1.update(gamepad1);
 
             /** Lift Code *************************************************************************/
 
@@ -162,9 +158,9 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
             motorPowerFactor = getPowerFactor(motorPowerFactor);
         
             drive.setWeightedDrivePower(
-                gamepad1.left_stick_x,
-                gamepad1.left_stick_y,
-                gamepad1.right_stick_x,
+                gamepadController1.getStick(GamepadButton.LEFT_STICK_X),
+                gamepadController1.getStick(GamepadButton.LEFT_STICK_Y),
+                gamepadController1.getStick(GamepadButton.RIGHT_STICK_X),
                 motorPowerFactor
             );
 
@@ -172,5 +168,9 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
         }
 
         motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    private double getPowerFactor(double previousPowerFactor) {
+        
     }
 }

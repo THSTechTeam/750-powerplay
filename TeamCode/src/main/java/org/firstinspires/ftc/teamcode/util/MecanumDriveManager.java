@@ -36,7 +36,6 @@ public class MecanumDriveManager {
     private DcMotorEx frontRight;
     private DcMotorEx backLeft;
     private DcMotorEx backRight;
-
     private List<DcMotorEx> motors;
 
     private BNO055IMU imu;
@@ -47,12 +46,7 @@ public class MecanumDriveManager {
     private boolean FLIP_Y        = false;
     private boolean FLIP_ROTATION = false;
 
-    public enum MODE {
-        BOT_CENTRIC,
-        FIELD_CENTRIC
-    }
-
-    private MODE mode;
+    private DriveMode mode;
 
     /*
      * The following constants are only used for encoder drive. If you do not intend to use encoder drive
@@ -82,10 +76,10 @@ public class MecanumDriveManager {
     private static double ENCODER_DRIVE_POWER = 0.3;
 
     public MecanumDriveManager(HardwareMap hardwareMap) {
-        frontLeft  = hardwareMap.get(DcMotorEx.class, "frontLeft");
-        frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
-        backLeft   = hardwareMap.get(DcMotorEx.class, "backLeft");
-        backRight  = hardwareMap.get(DcMotorEx.class, "backRight");
+        frontLeft  = hardwareMap.get(DcMotorEx.class, "motorFrontLeft");
+        frontRight = hardwareMap.get(DcMotorEx.class, "motorFrontRight");
+        backLeft   = hardwareMap.get(DcMotorEx.class, "motorBackLeft");
+        backRight  = hardwareMap.get(DcMotorEx.class, "motorBackRight");
 
         motors = Arrays.asList(frontLeft, frontRight, backLeft, backRight);
 
@@ -261,21 +255,23 @@ public class MecanumDriveManager {
         }
     }
 
-    public void setMode(MODE mode) {
+    public void setMode(DriveMode mode) {
         this.mode = mode;
     }
 
     private void setTargetPosition(int targetPosition) {
         for (DcMotorEx motor : motors) {
-            motor.setTargetPosition(targetPosition);
+            // TODO: Currently not working for some reason.
+            // motor.setTargetPosition(targetPosition);
         }
     }
 
     private void setTargetPositions(int frontLeft, int frontRight, int backLeft, int backRight) {
-        frontLeft.setTargetPosition(frontLeft);
-        frontRight.setTargetPosition(frontRight);
-        backLeft.setTargetPosition(backLeft);
-        backRight.setTargetPosition(backRight);
+        // TODO: Currently not working for some reason.
+        // frontLeft.setTargetPosition(frontLeft);
+        // frontRight.setTargetPosition(frontRight);
+        // backLeft.setTargetPosition(backLeft);
+        // backRight.setTargetPosition(backRight);
     }
 
     public void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior zeroPowerBehavior) {
