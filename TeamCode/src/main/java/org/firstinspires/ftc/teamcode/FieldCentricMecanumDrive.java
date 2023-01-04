@@ -5,18 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.hardware.Servo;
-
+import org.firstinspires.ftc.teamcode.util.MecanumDriveManager;
+import org.firstinspires.ftc.teamcode.util.DriveMode;
 
 @Config
 @TeleOp(name="Field Centric Mecanum Drive", group="TeleOp")
 public class FieldCentricMecanumDrive extends LinearOpMode {
-    private DcMotor motorFrontLeft = null;
-    private DcMotor motorFrontRight = null;
-    private DcMotor motorBackLeft = null;
-    private DcMotor motorBackRight = null;
+    private MecanumDriveManager drive;
+
     private DcMotor motorLift = null;
     private CRServo servoGrabber = null;
     private CRServo servoPivot = null;
@@ -54,20 +50,19 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
        }
    }
 
-
     @Override
     public void runOpMode() throws InterruptedException {
-        motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
-        motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
-        motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
-        motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
         motorLift = hardwareMap.dcMotor.get("motorLift");
         servoPivot = hardwareMap.get(CRServo.class, "servoPivot");
         servoGrabber = hardwareMap.get(CRServo.class, "servoGrabber");
 
-       servoPivot.setDirection(CRServo.Direction.REVERSE);
-       servoGrabber.setDirection(CRServo.Direction.REVERSE);
-       motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        servoPivot.setDirection(CRServo.Direction.REVERSE);
+        servoGrabber.setDirection(CRServo.Direction.REVERSE);
+
+        // Brandon drive code init.
+        drive = new MecanumDriveManager(hardwareMap);
+        drive.flipY();
+        drive.setMode(DriveMode.FIELD_CENTRIC);
 
         waitForStart();
 
@@ -75,95 +70,76 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
             return;
         }
 
-
-        if (opModeIsActive()) {
-            while (opModeIsActive()) {
-                telemetry.addData("Currently at", " at %7d", motorLift.getCurrentPosition());
-                telemetry.update();
+        while (opModeIsActive()) {
+            telemetry.addData("Currently at", " at %7d", motorLift.getCurrentPosition());
+            telemetry.update();
 
             /** Lift Code *************************************************************************/
 
-                if(gamepad2.x){
-                    motorLift.setTargetPosition(LIFT_LEVEL_1);
-                    motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    motorLift.setPower(LIFT_SPEED);
-                }
-                else if(gamepad2.y){
-                    motorLift.setTargetPosition(LIFT_LEVEL_2);
-                    motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    motorLift.setPower(LIFT_SPEED);
-                }
-                else if(gamepad2.b){
-                    motorLift.setTargetPosition(LIFT_LEVEL_3);
-                    motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    motorLift.setPower(LIFT_SPEED);
-                }
-                else if(gamepad2.a){
-                    motorLift.setTargetPosition(LIFT_LEVEL_0);
-                    motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    motorLift.setPower(LIFT_SPEED);
-                }
+            if(gamepad2.x){
+                motorLift.setTargetPosition(LIFT_LEVEL_1);
+                motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motorLift.setPower(LIFT_SPEED);
+            }
+            else if(gamepad2.y){
+                motorLift.setTargetPosition(LIFT_LEVEL_2);
+                motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motorLift.setPower(LIFT_SPEED);
+            }
+            else if(gamepad2.b){
+                motorLift.setTargetPosition(LIFT_LEVEL_3);
+                motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motorLift.setPower(LIFT_SPEED);
+            }
+            else if(gamepad2.a){
+                motorLift.setTargetPosition(LIFT_LEVEL_0);
+                motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motorLift.setPower(LIFT_SPEED);
+            }
 
-                if(gamepad2.dpad_up && !gamepad2.dpad_down) {
-                    motorLift.setPower(1);
-                }
-                else if(gamepad2.dpad_down && !gamepad2.dpad_up) {
-                    motorLift.setPower(0);
-                }
+            if(gamepad2.dpad_up && !gamepad2.dpad_down) {
+                motorLift.setPower(1);
+            }
+            else if(gamepad2.dpad_down && !gamepad2.dpad_up) {
+                motorLift.setPower(0);
+            }
 
             /** Pivot Code ************************************************************************/
 
-                // Pivot to front
-                if (gamepad2.left_bumper && !gamepad2.right_bumper){
-                    servoPivot.setPower(PIVOT_POWER);
-                }
-                // Pivot to back
-                else if(gamepad2.right_bumper && !gamepad2.left_bumper){
-                    servoPivot.setPower(-PIVOT_POWER);
-                }
-                else {
-                    servoPivot.setPower(0);
-                }
+            // Pivot to front
+            if (gamepad2.left_bumper && !gamepad2.right_bumper){
+                servoPivot.setPower(PIVOT_POWER);
+            }
+            // Pivot to back
+            else if(gamepad2.right_bumper && !gamepad2.left_bumper){
+                servoPivot.setPower(-PIVOT_POWER);
+            }
+            else {
+                servoPivot.setPower(0);
+            }
 
            /** Grabber Code ***********************************************************************/
 
-                // Close grabber
-                if(gamepad2.right_trigger > 0.5) {
-                    servoGrabber.setPower(0);
-                // Open grabber
-                } else {
-                    servoGrabber.setPower(GRABBER_POWER);
-                }
+            // Close grabber
+            if(gamepad2.right_trigger > 0.5) {
+                servoGrabber.setPower(0);
+            // Open grabber
+            } else {
+                servoGrabber.setPower(GRABBER_POWER);
+            }
 
             /** Drive Code ************************************************************************/
 
-            final double y = -gamepad1.left_stick_y; // reversed
-            final double x = gamepad1.left_stick_x;
-            final double rx = gamepad1.right_stick_x;
-            final double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-
-            double[] motorPowers = {
-                    (y + x + rx) / denominator, // front left
-                    (y - x + rx) / denominator, // back left
-                    (y - x - rx) / denominator, // front right
-                    (y + x - rx) / denominator, // back right
-            };
-
             motorPowerFactor = getPowerFactor(motorPowerFactor);
 
-            for (int i = 0; i < motorPowers.length; i++) {
-                motorPowers[i] *= motorPowerFactor;
-            }
-
-            motorFrontLeft.setPower(motorPowers[0]);
-            motorBackLeft.setPower(motorPowers[1]);
-            motorFrontRight.setPower(motorPowers[2]);
-            motorBackRight.setPower(motorPowers[3]);
+            drive.setWeightedDrivePower(
+                    gamepad1.left_stick_x,
+                    gamepad1.left_stick_y,
+                    gamepad1.right_stick_x,
+                    motorPowerFactor
+            );
 
             idle();
-
-            }
-            motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
     }
 }
