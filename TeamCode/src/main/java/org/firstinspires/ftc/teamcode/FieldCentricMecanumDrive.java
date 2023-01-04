@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -9,7 +10,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
-
+@Config
 @TeleOp(name="Field Centric Mecanum Drive", group="TeleOp")
 public class FieldCentricMecanumDrive extends LinearOpMode {
     private DcMotor motorFrontLeft = null;
@@ -17,25 +18,23 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
     private DcMotor motorBackLeft = null;
     private DcMotor motorBackRight = null;
     private DcMotor motorLift = null;
-    private CRServo grabberLeft = null;
-    private CRServo grabberRight = null;
+    private CRServo servoGrabber = null;
     private CRServo servoPivot = null;
 
     /** Change these values to modify motor/servo positions and speeds ****************************/
 
-    private static final int LIFT_LEVEL_0 = 0;
-    private static final int LIFT_LEVEL_1 = 1450;//2900;
-    private static final int LIFT_LEVEL_2 = 2300;//4600;
-    private static final int LIFT_LEVEL_3 = 3500;//6500;
+    // These values are marked as public to allow the dashboard to display them for tuning. 
+    public static int LIFT_LEVEL_0 = -1075;
+    public static int LIFT_LEVEL_1 = 450;//2900;
+    public static int LIFT_LEVEL_2 = 1300;//4600;
+    public static int LIFT_LEVEL_3 = 2500;//6500;
     private static final double LIFT_SPEED = 1;
 
+    private static final double PIVOT_POWER = 0.7;
     private static final double PIVOT_FRONT_POSITION = 1;
     private static final double PIVOT_BACK_POSITION = 0.25;
 
-    private static final double GRABBER_POWER = 1;
-
-    //private static final double GRABBER_OPEN_POSITION = 0;
-    //private static final double GRABBER_CLOSED_POSITION = 1;
+    private static final double GRABBER_POWER = 0.7;
 
     /**********************************************************************************************/
 
@@ -58,29 +57,17 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-       motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
-       motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
-       motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
-       motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
-       motorLift = hardwareMap.dcMotor.get("motorLift");
-       servoPivot = hardwareMap.get(CRServo.class, "servoPivot");
-        grabberLeft = hardwareMap.get(CRServo.class, "grabberLeft");
-        grabberRight = hardwareMap.get(CRServo.class, "grabberRight");
+        motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
+        motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
+        motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
+        motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
+        motorLift = hardwareMap.dcMotor.get("motorLift");
+        servoPivot = hardwareMap.get(CRServo.class, "servoPivot");
+        servoGrabber = hardwareMap.get(CRServo.class, "servoGrabber");
 
-       servoPivot.setDirection(CRServo.Direction.FORWARD);
-       grabberLeft.setDirection(CRServo.Direction.FORWARD);
-       grabberRight.setDirection(CRServo.Direction.REVERSE);
-
-        // reverse left side motors
-       // motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+       servoPivot.setDirection(CRServo.Direction.REVERSE);
+       servoGrabber.setDirection(CRServo.Direction.REVERSE);
        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        // TODO: Brandon Note - IMU Code broken on vertical hubs
-        // retrieve imu from hardware map
-//        BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "imu");
-//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-//        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-//        imu.initialize(parameters);
 
         waitForStart();
 
@@ -127,14 +114,12 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
             /** Pivot Code ************************************************************************/
 
                 // Pivot to front
-                if (gamepad2.dpad_left && !gamepad2.dpad_right){
-                    servoPivot.setPower(-0.7);
-                    //servoPivot.setPosition(PIVOT_FRONT_POSITION);
+                if (gamepad2.left_bumper && !gamepad2.right_bumper){
+                    servoPivot.setPower(PIVOT_POWER);
                 }
                 // Pivot to back
-                else if(gamepad2.dpad_right && !gamepad2.dpad_left){
-                    servoPivot.setPower(0.7);
-                    //servoPivot.setPosition(PIVOT_BACK_POSITION);
+                else if(gamepad2.right_bumper && !gamepad2.left_bumper){
+                    servoPivot.setPower(-PIVOT_POWER);
                 }
                 else {
                     servoPivot.setPower(0);
@@ -142,52 +127,19 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
            /** Grabber Code ***********************************************************************/
 
-                // Open grabber
-                if(gamepad2.left_bumper && !gamepad2.right_bumper) {
-                    //  grabberLeft.setPosition(GRABBER_OPEN_POSITION);
-                    //  grabberRight.setPosition(GRABBER_OPEN_POSITION);
-                    grabberLeft.setPower(GRABBER_POWER);
-                    grabberRight.setPower(GRABBER_POWER);
-                }
                 // Close grabber
-                else if(gamepad2.right_bumper && !gamepad2.left_bumper) {
-                    // grabberLeft.setPosition(GRABBER_CLOSED_POSITION);
-                    // grabberRight.setPosition(GRABBER_CLOSED_POSITION);
-                    grabberLeft.setPower(-1 * GRABBER_POWER);
-                    grabberRight.setPower(-1 * GRABBER_POWER);
+                if(gamepad2.right_trigger > 0.5) {
+                    servoGrabber.setPower(0);
+                // Open grabber
                 } else {
-                    grabberLeft.setPower(0);
-                    grabberRight.setPower(0);
+                    servoGrabber.setPower(GRABBER_POWER);
                 }
-
-                /*telemetry.addData("grabberLeft Position", "%.2f", grabberLeft.getPosition());
-                telemetry.addData("grabberRight Position", "%.2f", grabberRight.getPosition());
-                telemetry.update();
-
-                // Open grabber
-                if(gamepad1.left_bumper && !gamepad1.right_bumper) {
-                    grabberLeft.setPosition(GRABBER_OPEN_POSITION);
-                    grabberRight.setPosition(GRABBER_OPEN_POSITION);
-                }
-                // Close grabber
-                else if(gamepad1.right_bumper && !gamepad1.left_bumper) {
-                    grabberLeft.setPosition(GRABBER_CLOSED_POSITION);
-                    grabberRight.setPosition(GRABBER_CLOSED_POSITION);
-                }*/
 
             /** Drive Code ************************************************************************/
 
-            // 4097 driver station assignees controller to gamepad2 by default
             final double y = -gamepad1.left_stick_y; // reversed
-            final double x = (gamepad1.left_stick_x * 1.0); // imperfect strafing fix & reversed
+            final double x = gamepad1.left_stick_x;
             final double rx = gamepad1.right_stick_x;
-
-            // TODO: Brandon Note - IMU Code broken on vertical hubs
-//            final double botHeading = imu.getAngularOrientation().firstAngle;
-
-            // x / y offsets
-//            final double rotY = y * Math.cos(botHeading) + x * Math.sin(botHeading);
-//            final double rotX = -y * Math.sin(botHeading) + x * Math.cos(botHeading);
             final double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
 
             double[] motorPowers = {
