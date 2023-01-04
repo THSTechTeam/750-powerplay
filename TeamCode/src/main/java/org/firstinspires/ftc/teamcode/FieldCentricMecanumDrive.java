@@ -21,9 +21,9 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
     // These values are marked as public to allow the dashboard to display them for tuning. 
     public static int LIFT_LEVEL_0 = -1075;
-    public static int LIFT_LEVEL_1 = 450;//2900;
-    public static int LIFT_LEVEL_2 = 1300;//4600;
-    public static int LIFT_LEVEL_3 = 2300;//6500;
+    public static int LIFT_LEVEL_1 = 450;
+    public static int LIFT_LEVEL_2 = 1300;
+    public static int LIFT_LEVEL_3 = 2300;
     private static final double LIFT_SPEED = 1;
 
     private static final double PIVOT_POWER = 0.7;
@@ -141,7 +141,5 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
             idle();
         }
-
-        motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 }
