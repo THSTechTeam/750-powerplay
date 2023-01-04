@@ -126,11 +126,11 @@ public class MecanumDriveManager {
         y    = invertedAxes.get(1);
         turn = invertedAxes.get(2);
 
-        if (mode == MODE.FIELD_CENTRIC) {
+        if (mode == DriveMode.FIELD_CENTRIC) {
             double botHeading = getRawExternalHeading();
 
-            double adjustedX = -y * Math.sin(botHeading) + x * Math.cos(botHeading);
-            double adjustedY =  y * Math.cos(botHeading) + x * Math.sin(botHeading);
+            double adjustedX = -y * Math.sin(-botHeading) + x * Math.cos(-botHeading);
+            double adjustedY =  y * Math.cos(-botHeading) + x * Math.sin(-botHeading);
 
             x = adjustedX;
             y = adjustedY;
@@ -160,11 +160,11 @@ public class MecanumDriveManager {
         y    = invertedAxes.get(1);
         turn = invertedAxes.get(2);
 
-        if (mode == MODE.FIELD_CENTRIC) {
+        if (mode == DriveMode.FIELD_CENTRIC) {
             double botHeading = getRawExternalHeading();
 
-            double adjustedX = -y * Math.sin(botHeading) + x * Math.cos(botHeading);
-            double adjustedY =  y * Math.cos(botHeading) + x * Math.sin(botHeading);
+            double adjustedX = -y * Math.sin(-botHeading) + x * Math.cos(-botHeading);
+            double adjustedY =  y * Math.cos(-botHeading) + x * Math.sin(-botHeading);
 
             x = adjustedX;
             y = adjustedY;

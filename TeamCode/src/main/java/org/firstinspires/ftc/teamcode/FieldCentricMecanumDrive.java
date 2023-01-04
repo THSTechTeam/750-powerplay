@@ -141,5 +141,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
             idle();
         }
+
+        motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 }

@@ -9,7 +9,7 @@ public class GamepadController extends GamepadControllerBase {
     public double getStick(GamepadButton stick) {
         switch (stick) {
             case LEFT_STICK_X:
-                return this.gamepad.left_stick_x
+                return this.gamepad.left_stick_x;
             case LEFT_STICK_Y:
                 return this.gamepad.left_stick_y;
             case RIGHT_STICK_X:
