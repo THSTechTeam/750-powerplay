@@ -10,10 +10,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class LiftDebugger extends LinearOpMode {
     private DcMotor motorLift = null;
 
-    public static int LIFT_LEVEL_0 = -1075;
-    public static int LIFT_LEVEL_1 = 450;
-    public static int LIFT_LEVEL_2 = 1300;
-    public static int LIFT_LEVEL_3 = 2300;
+    public static int LIFT_LEVEL_0 = 0;
+    public static int LIFT_LEVEL_1 = 1500;
+    public static int LIFT_LEVEL_2 = 2300;
+    public static int LIFT_LEVEL_3 = 3300;
     public static double LIFT_SPEED = 0.5;
 
     @Override
