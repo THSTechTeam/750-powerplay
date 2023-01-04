@@ -27,7 +27,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
     public static int LIFT_LEVEL_0 = -1075;
     public static int LIFT_LEVEL_1 = 450;//2900;
     public static int LIFT_LEVEL_2 = 1300;//4600;
-    public static int LIFT_LEVEL_3 = 2500;//6500;
+    public static int LIFT_LEVEL_3 = 2300;//6500;
     private static final double LIFT_SPEED = 1;
 
     private static final double PIVOT_POWER = 0.7;
