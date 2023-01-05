@@ -20,10 +20,10 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
     /** Change these values to modify motor/servo positions and speeds ****************************/
 
     // These values are marked as public to allow the dashboard to display them for tuning. 
-    public static int LIFT_LEVEL_0 = 0;
+    public static int LIFT_LEVEL_0 = 100;
     public static int LIFT_LEVEL_1 = 1500;
-    public static int LIFT_LEVEL_2 = 2300;
-    public static int LIFT_LEVEL_3 = 3300;
+    public static int LIFT_LEVEL_2 = 2400;
+    public static int LIFT_LEVEL_3 = 3400;
     private static final double LIFT_SPEED = 1;
 
     private static final double PIVOT_POWER = 0.7;
