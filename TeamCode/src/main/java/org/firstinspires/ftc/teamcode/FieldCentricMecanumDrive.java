@@ -56,7 +56,6 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
         servoPivot = hardwareMap.get(CRServo.class, "servoPivot");
         servoGrabber = hardwareMap.get(CRServo.class, "servoGrabber");
 
-        servoPivot.setDirection(CRServo.Direction.REVERSE);
         servoGrabber.setDirection(CRServo.Direction.REVERSE);
 
         // Brandon drive code init.
@@ -106,13 +105,8 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
             /** Pivot Code ************************************************************************/
 
-            // Pivot to front
-            if (gamepad2.left_bumper && !gamepad2.right_bumper){
-                servoPivot.setPower(PIVOT_POWER);
-            }
-            // Pivot to back
-            else if(gamepad2.right_bumper && !gamepad2.left_bumper){
-                servoPivot.setPower(-PIVOT_POWER);
+            if (Math.abs(gamepad2.right_stick_x) > 0.1){
+                servoPivot.setPower(gamepad2.right_stick_x * PIVOT_POWER);
             }
             else {
                 servoPivot.setPower(0);
@@ -129,6 +123,12 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
             }
 
             /** Drive Code ************************************************************************/
+
+            if (gamepad1.x) {
+                drive.setMode(DriveMode.BOT_CENTRIC);
+            } else if (gamepad1.y) {
+                drive.setMode(DriveMode.FIELD_CENTRIC);
+            }
 
             motorPowerFactor = getPowerFactor(motorPowerFactor);
 
