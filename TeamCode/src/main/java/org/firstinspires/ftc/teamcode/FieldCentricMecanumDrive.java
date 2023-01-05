@@ -5,13 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import org.firstinspires.ftc.teamcode.util.MecanumDriveManager;
-import org.firstinspires.ftc.teamcode.util.DriveMode;
 
 @Config
 @TeleOp(name="Field Centric Mecanum Drive", group="TeleOp")
 public class FieldCentricMecanumDrive extends LinearOpMode {
-    private MecanumDriveManager drive;
+    private DcMotor motorFrontLeft = null;
+    private DcMotor motorFrontRight = null;
+    private DcMotor motorBackLeft = null;
+    private DcMotor motorBackRight = null;
 
     private DcMotor motorLift = null;
     private CRServo servoGrabber = null;
@@ -52,16 +53,18 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        motorLift = hardwareMap.dcMotor.get("motorLift");
+        motorLift = hardwareMap.get(DcMotor.class, "motorLift");
         servoPivot = hardwareMap.get(CRServo.class, "servoPivot");
         servoGrabber = hardwareMap.get(CRServo.class, "servoGrabber");
 
         servoGrabber.setDirection(CRServo.Direction.REVERSE);
 
-        // Brandon drive code init.
-        drive = new MecanumDriveManager(hardwareMap);
-        drive.flipY();
-        // drive.setMode(DriveMode.FIELD_CENTRIC);
+        motorFrontLeft = hardwareMap.get(DcMotor.class, "motorFrontLeft");
+        motorFrontRight = hardwareMap.get(DcMotor.class, "motorFrontRight");
+        motorBackLeft = hardwareMap.get(DcMotor.class, "motorBackLeft");
+        motorBackRight = hardwareMap.get(DcMotor.class, "motorBackRight");
+
+        motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
 
         waitForStart();
 
@@ -128,21 +131,18 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
             /** Drive Code ************************************************************************/
 
-            if (gamepad1.x) {
-                drive.setMode(DriveMode.BOT_CENTRIC);
-            } else if (gamepad1.y) {
-                // drive.setMode(DriveMode.FIELD_CENTRIC);
-            }
-
             motorPowerFactor = getPowerFactor(motorPowerFactor);
 
-            drive.setWeightedDrivePower(
-                    gamepad1.left_stick_x,
-                    gamepad1.left_stick_y,
-                    gamepad1.right_stick_x,
-                    motorPowerFactor
-            );
+            double x = gamepad1.left_stick_x;
+            double y = -gamepad1.left_stick_y;
+            double rx = gamepad1.right_stick_x;
+            double denominator = Math.max(Math.abs(x) + Math.abs(y) + Math.abs(rx), 1);
 
+            motorFrontLeft.setPower((x + y + rx) / denominator * motorPowerFactor);
+            motorFrontRight.setPower((x - y - rx) / denominator * motorPowerFactor);
+            motorBackLeft.setPower((x - y + rx) / denominator * motorPowerFactor);
+            motorBackRight.setPower((x + y - rx) / denominator * motorPowerFactor);
+            
             idle();
         }
     }
