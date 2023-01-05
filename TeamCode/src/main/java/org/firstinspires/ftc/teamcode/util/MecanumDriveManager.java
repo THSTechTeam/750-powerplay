@@ -30,7 +30,7 @@ public class MecanumDriveManager {
     private DcMotorEx backRight;
     private List<DcMotorEx> motors;
 
-    private BNO055IMU imu;
+    // private BNO055IMU imu;
 
     // The following is used to correct for the fact that not every drive train is the same.
     // Some will need to reverse different motors and some will need to reverse the input of different gamepad axes.
@@ -60,10 +60,10 @@ public class MecanumDriveManager {
 
         // This section can add 2-3 seconds during the init phase of the robot
         // and can be quite annoying if you are not using it.
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-        imu.initialize(parameters);
+        // imu = hardwareMap.get(BNO055IMU.class, "imu");
+        // BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        // parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        // imu.initialize(parameters);
 
         // The following section is taken from the Roadrunner quickstart.
         // TODO: If the hub containing the IMU you are using is mounted so that the "REV" logo does
@@ -87,7 +87,7 @@ public class MecanumDriveManager {
         //
         // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
         // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
-        BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
+        // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
 
         setMode(DriveMode.BOT_CENTRIC);
     }
@@ -104,7 +104,7 @@ public class MecanumDriveManager {
     // WARNING: Doing this un-intentionally can cause the robot to drive in a direction that is not expected.
     // Before using this method ensure that the robot is facing the correct direction.
     public void resetIMUZeroHeading() {
-        imu.initialize(imu.getParameters());
+        // imu.initialize(imu.getParameters());
     }
 
     public void setMotorPowers(double power) {
@@ -201,7 +201,8 @@ public class MecanumDriveManager {
     }
 
     public double getRawExternalHeading() {
-        return imu.getAngularOrientation().firstAngle;
+        // return imu.getAngularOrientation().firstAngle;
+        return 0.0;
     }
 
     public void setMode(DcMotor.RunMode runMode) {

@@ -22,9 +22,9 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
     // These values are marked as public to allow the dashboard to display them for tuning. 
     public static int LIFT_LEVEL_0 = 0;
     public static int LIFT_LEVEL_1 = 1500;
-    public static int LIFT_LEVEL_2 = 2300;
-    public static int LIFT_LEVEL_3 = 3300;
-    private static final double LIFT_SPEED = 1;
+    public static int LIFT_LEVEL_2 = 2400;
+    public static int LIFT_LEVEL_3 = 3400;
+    public static double LIFT_SPEED = 1;
 
     private static final double PIVOT_POWER = 0.7;
     private static final double PIVOT_FRONT_POSITION = 1;
@@ -34,8 +34,8 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
     /**********************************************************************************************/
 
-    private final double lowPowerFactor = 0.3;
-    private final double highPowerFactor = 0.75;
+    public static double lowPowerFactor = 0.5;
+    public static double highPowerFactor = 0.75;
 
     private int currentLiftLevel = 0;
     private double motorPowerFactor = lowPowerFactor;
@@ -61,7 +61,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
         // Brandon drive code init.
         drive = new MecanumDriveManager(hardwareMap);
         drive.flipY();
-        drive.setMode(DriveMode.FIELD_CENTRIC);
+        // drive.setMode(DriveMode.FIELD_CENTRIC);
 
         waitForStart();
 
@@ -103,6 +103,10 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
                 motorLift.setPower(0);
             }
 
+            if (gamepad2.dpad_right) {
+                motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }
+
             /** Pivot Code ************************************************************************/
 
             if (Math.abs(gamepad2.right_stick_x) > 0.1){
@@ -127,7 +131,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
             if (gamepad1.x) {
                 drive.setMode(DriveMode.BOT_CENTRIC);
             } else if (gamepad1.y) {
-                drive.setMode(DriveMode.FIELD_CENTRIC);
+                // drive.setMode(DriveMode.FIELD_CENTRIC);
             }
 
             motorPowerFactor = getPowerFactor(motorPowerFactor);
