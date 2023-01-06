@@ -20,9 +20,9 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
     /** Change these values to modify motor/servo positions and speeds ****************************/
     private PIDController liftController;
-    public static double LIFT_KP = 0.0008;
-    public static double LIFT_KI = 0.0005;
-    public static double LIFT_KD = 0.00025;
+    public static double LIFT_KP = 0.0005;
+    public static double LIFT_KI = 0.0001;
+    public static double LIFT_KD = 0.00001;
 
     public static int MANUAL_LIFT_INCREMENT = 50;
     
