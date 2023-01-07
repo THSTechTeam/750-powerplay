@@ -46,13 +46,11 @@ public class AutoCodeSimple extends LinearOpMode {
     // UNITS ARE PIXELS
     // NOTE: this calibration is for the C920 webcam at 800x448.
     // You will need to do your own calibration for other configurations!
-    double fx = 578.272;
-    double fy = 578.272;
-    double cx = 402.145;
-    double cy = 221.506;
-
-    // UNITS ARE METERS
-    double tagsize = 0.166;
+    private double fx = 578.272;
+    private double fy = 578.272;
+    private double cx = 402.145;
+    private double cy = 221.506;
+    private double tagsize = 0.166;
 
     // Tag ID 1,2,3 from the 36h11 family
     /*EDIT IF NEEDED!!!*/
@@ -72,7 +70,7 @@ public class AutoCodeSimple extends LinearOpMode {
             motor.setPower(drivePower);
         }
 
-        sleep((long) (TILE_METER_LENGTH / drivePower * 1100));
+        sleep((long) (TILE_METER_LENGTH / drivePower * 1500));
 
         for (DcMotor motor : driveMotors) {
             motor.setPower(0);
@@ -83,7 +81,7 @@ public class AutoCodeSimple extends LinearOpMode {
             motor.setPower(-drivePower);
         }
 
-        sleep((long) (TILE_METER_LENGTH / drivePower * 250));
+        sleep((long) (TILE_METER_LENGTH / drivePower * 400));
 
         for (DcMotor motor : driveMotors) {
             motor.setPower(0);
@@ -94,7 +92,7 @@ public class AutoCodeSimple extends LinearOpMode {
     private void strafeLeftOneTile(DcMotor[] mecanumMotors) {
         // NOTE: Currently drives without the encoder.
         // Configured for Rev Robotics HD Hex Motor 20:1
-        final double drivePower = 0.15;
+        final double drivePower = 0.50;
 
         mecanumMotors[0].setPower(-drivePower);
         mecanumMotors[1].setPower(drivePower);
@@ -111,7 +109,7 @@ public class AutoCodeSimple extends LinearOpMode {
     private void strafeRightOneTile(DcMotor[] mecanumMotors) {
         // NOTE: Currently drives without the encoder.
         // Configured for Rev Robotics HD Hex Motor 20:1
-        final double drivePower = 0.15;
+        final double drivePower = 0.50;
 
         mecanumMotors[0].setPower(drivePower);
         mecanumMotors[1].setPower(-drivePower);
@@ -135,7 +133,6 @@ public class AutoCodeSimple extends LinearOpMode {
         };
 
         // Reverse left side motors.
-        mecanumMotors[0].setDirection(DcMotorSimple.Direction.REVERSE);
         mecanumMotors[1].setDirection(DcMotorSimple.Direction.REVERSE);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -146,7 +143,7 @@ public class AutoCodeSimple extends LinearOpMode {
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                camera.startStreaming(800, 448, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -217,8 +214,9 @@ public class AutoCodeSimple extends LinearOpMode {
         } else {
             telemetry.addLine("No tag snapshot available, it was never sighted during the init loop.");
             telemetry.update();
-        }
 
+            forwardOneTile(mecanumMotors);
+        }
 
         //auto code here
         //code for going to location is at end of code, this is just simple read and then go to location
