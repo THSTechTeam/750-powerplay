@@ -20,11 +20,11 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
     /** Change these values to modify motor/servo positions and speeds ****************************/
     private PIDController liftController;
-    public static double LIFT_KP = 0.0005;
+    public static double LIFT_KP = 0.002;
     public static double LIFT_KI = 0.0001;
-    public static double LIFT_KD = 0.00001;
+    public static double LIFT_KD = 0.001;
 
-    public static int MANUAL_LIFT_INCREMENT = 50;
+    public static int MANUAL_LIFT_INCREMENT = 25;
     
     // These values are marked as public to allow the dashboard to display them for tuning. 
     public static int LIFT_LEVEL_0 = 100;
@@ -92,6 +92,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
             /** Lift Code *************************************************************************/
 
+            // Preset lift positions.
             if (gamepad2.x) {
                 liftController.setTargetPosition(LIFT_LEVEL_1);
             }
@@ -105,11 +106,8 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
                 liftController.setTargetPosition(LIFT_LEVEL_0);
             }
 
-            if (gamepad2.dpad_up) {
-                liftController.setTargetPosition(liftController.getTargetPosition() + MANUAL_LIFT_INCREMENT);
-            } else if (gamepad2.dpad_down) {
-                liftController.setTargetPosition(liftController.getTargetPosition() - MANUAL_LIFT_INCREMENT);
-            }
+            // Manual lift control.
+            liftController.setTargetPosition(liftController.getTargetPosition() - (gamepad2.left_stick_y * MANUAL_LIFT_INCREMENT));
 
             if (gamepad2.dpad_right) {
                 liftController.resetEncoder();

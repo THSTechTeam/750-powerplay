@@ -10,46 +10,19 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class LiftDebugger extends LinearOpMode {
     private DcMotor motorLift = null;
 
-    public static int LIFT_LEVEL_0 = 0;
-    public static int LIFT_LEVEL_1 = 1500;
-    public static int LIFT_LEVEL_2 = 2300;
-    public static int LIFT_LEVEL_3 = 3300;
-    public static double LIFT_SPEED = 0.5;
+    public static double motorPower = 0.1;
 
     @Override
     public void runOpMode() throws InterruptedException {
         motorLift = hardwareMap.get(DcMotor.class, "motorLift");
 
-        while (!isStopRequested() && !isStarted()) {
-            telemetry.addData("Lift Level 0", LIFT_LEVEL_0);
-            telemetry.addData("Lift Level 1", LIFT_LEVEL_1);
-            telemetry.addData("Lift Level 2", LIFT_LEVEL_2);
-            telemetry.addData("Lift Level 3", LIFT_LEVEL_3);
-            telemetry.addData("Lift Speed", LIFT_SPEED);
-            telemetry.addData("Current Lift Level", motorLift.getCurrentPosition());
-            telemetry.update();
-        }
+        waitForStart();
 
         while (opModeIsActive()) {
-            if (gamepad2.x) {
-                motorLift.setTargetPosition(LIFT_LEVEL_1);
-                motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                motorLift.setPower(LIFT_SPEED);
-            } else if(gamepad2.y) {
-                motorLift.setTargetPosition(LIFT_LEVEL_2);
-                motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                motorLift.setPower(LIFT_SPEED);
-            } else if(gamepad2.b) {
-                motorLift.setTargetPosition(LIFT_LEVEL_3);
-                motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                motorLift.setPower(LIFT_SPEED);
-            } else if(gamepad2.a) {
-                motorLift.setTargetPosition(LIFT_LEVEL_0);
-                motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                motorLift.setPower(LIFT_SPEED);
-            }
+            motorLift.setPower(gamepad1.right_stick_y * motorPower);
 
-            telemetry.addData("Current Lift Level", motorLift.getCurrentPosition());
+            telemetry.addData("Motor Power", motorLift.getPower());
+            telemetry.addData("Right Stick Y", gamepad1.right_stick_y);
             telemetry.update();
             idle();
         }
