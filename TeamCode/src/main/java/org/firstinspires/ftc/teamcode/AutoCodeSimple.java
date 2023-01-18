@@ -70,7 +70,7 @@ public class AutoCodeSimple extends LinearOpMode {
             motor.setPower(drivePower);
         }
 
-        sleep((long) (TILE_METER_LENGTH / drivePower * 1500));
+        sleep((long) (TILE_METER_LENGTH / drivePower * 1500)); // but y tho
 
         for (DcMotor motor : driveMotors) {
             motor.setPower(0);
