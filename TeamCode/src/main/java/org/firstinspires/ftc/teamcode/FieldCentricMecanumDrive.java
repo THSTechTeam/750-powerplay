@@ -20,8 +20,8 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
     /** Change these values to modify motor/servo positions and speeds ****************************/
     private PIDController liftController;
-    public static double LIFT_KP = 0.002;
-    public static double LIFT_KI = 0.0001;
+    public static double LIFT_KP = 0.003;
+    public static double LIFT_KI = 0.0;
     public static double LIFT_KD = 0.001;
 
     public static int MANUAL_LIFT_INCREMENT = 25;
@@ -64,9 +64,8 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
                 LIFT_KI, 
                 LIFT_KD,
                 hardwareMap.get(DcMotorEx.class, "motorLift"),
-                DcMotorSimple.Direction.FORWARD
+                DcMotorSimple.Direction.REVERSE
             );
-        liftController.setEncoderConstraints(0, 3700);
         liftController.setMaxMotorPower(LIFT_POWER);
 
         servoPivot = hardwareMap.get(CRServo.class, "servoPivot");
