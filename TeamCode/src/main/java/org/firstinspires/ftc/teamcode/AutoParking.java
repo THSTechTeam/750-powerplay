@@ -1,13 +1,17 @@
-/*package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.util.PIDController;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -43,6 +47,12 @@ public class AutoParking extends LinearOpMode {
     private final int RIGHT_TAG_ID  = 3;
 
     private AprilTagDetection tagOfInterest = null;
+
+    private PIDController liftController;
+    public static double LIFT_KP = 0.003;
+    public static double LIFT_KI = 0.0;
+    public static double LIFT_KD = 0.001;
+    public static double LIFT_POWER = 1;
 
     private void resetHeading(DcMotor[] driveMotors) {
         final int sleepBetweenStepTime = 250;
@@ -101,6 +111,22 @@ public class AutoParking extends LinearOpMode {
         }
     }
 
+    private void driveBackwardOneTile(DcMotor[] driveMotors) {
+        // NOTE: Currently drives without the encoder.
+        // Configured for Rev Robotics HD Hex Motor 20:1
+        final double drivePower = 0.2;
+
+        for (DcMotor motor : driveMotors) {
+            motor.setPower(-drivePower);
+        }
+
+        sleep((long)(TILE_METER_LENGTH / drivePower * 1000));
+
+        for (DcMotor motor : driveMotors) {
+            motor.setPower(0);
+        }
+    }
+
     private void strafeLeftOneTile(DcMotor[] mecanumMotors) {
         // NOTE: Currently drives without the encoder.
         // Configured for Rev Robotics HD Hex Motor 20:1
@@ -134,6 +160,7 @@ public class AutoParking extends LinearOpMode {
             motor.setPower(0);
         }
     }
+    
 
     @Override
     public void runOpMode() {
@@ -143,6 +170,19 @@ public class AutoParking extends LinearOpMode {
                 hardwareMap.get(DcMotor.class, "motorFrontRight"),
                 hardwareMap.get(DcMotor.class, "motorBackRight")
         };
+
+        liftController = new PIDController(
+                LIFT_KP,
+                LIFT_KI,
+                LIFT_KD,
+                hardwareMap.get(DcMotorEx.class, "motorLift"),
+                DcMotorSimple.Direction.REVERSE
+        );
+        liftController.setMaxMotorPower(LIFT_POWER);
+
+        CRServo servoPivot = hardwareMap.get(CRServo.class, "servoPivot");
+        CRServo servoGrabber = hardwareMap.get(CRServo.class, "servoGrabber");
+        servoGrabber.setDirection(CRServo.Direction.REVERSE);
 
         // Reverse left side motors.
         mecanumMotors[0].setDirection(DcMotorSimple.Direction.REVERSE);
@@ -233,6 +273,14 @@ public class AutoParking extends LinearOpMode {
             driveForwardOneTile(mecanumMotors);
         }
 
+        driveForwardOneTile(mecanumMotors);
+        //pivot arm to the left?
+        //raise arm to medium setting
+        //release cone onto pole
+        //pivot back
+        //drop arm
+        driveBackwardOneTile(mecanumMotors);
+
         if (tagOfInterest.id == LEFT_TAG_ID) {
             // Drive to the Left Zone.
             driveForwardOneTile(mecanumMotors);
@@ -258,4 +306,4 @@ public class AutoParking extends LinearOpMode {
             telemetry.addLine("No tag ID available.");
         }
     }
-}*/
+}
