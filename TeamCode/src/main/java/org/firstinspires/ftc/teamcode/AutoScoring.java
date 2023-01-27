@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.util.PIDController;
@@ -25,8 +25,10 @@ import java.util.ArrayList;
 
 @Autonomous(name="Autonomous Parking", group="Autonomous")
 @Disabled
-public class AutoParking extends LinearOpMode {
+public class AutoScoring extends LinearOpMode {
     private static final double TILE_METER_LENGTH = 0.6;
+
+    private ElapsedTime runtime = new ElapsedTime();
 
     // Used for resetting the orientation of the robot throughout the parking process.
     BNO055IMU imu;
@@ -53,6 +55,11 @@ public class AutoParking extends LinearOpMode {
     public static double LIFT_KI = 0.0;
     public static double LIFT_KD = 0.001;
     public static double LIFT_POWER = 1;
+
+    public static int LIFT_LEVEL_0 = 100;
+    public static int LIFT_LEVEL_1 = 1500;
+    public static int LIFT_LEVEL_2 = 2400;
+    public static int LIFT_LEVEL_3 = 3400;
 
     private void resetHeading(DcMotor[] driveMotors) {
         final int sleepBetweenStepTime = 250;
@@ -160,7 +167,31 @@ public class AutoParking extends LinearOpMode {
             motor.setPower(0);
         }
     }
-    
+
+    private void armPivot(CRServo servoPivot, CRServo.Direction Direction, CRServo servoGrabber) {
+        runtime.reset();
+        while(runtime.seconds() < 0.5) {
+            servoPivot.setDirection(Direction);
+            servoPivot.setPower(0.7);
+
+            if(servoGrabber != null) {
+                holdCone(servoGrabber, 0.7);
+            }
+        }
+    }
+
+    private void armHeight(PIDController liftController, double LIFT_LEVEL, CRServo servoGrabber) {
+         liftController.setTargetPosition(LIFT_LEVEL);
+
+        if(servoGrabber != null) {
+                holdCone(servoGrabber, 0.7);
+            }
+    }
+
+    private void holdCone(CRServo servoGrabber, double power) {
+        servoGrabber.setPower(power);
+    }
+
 
     @Override
     public void runOpMode() {
@@ -178,6 +209,7 @@ public class AutoParking extends LinearOpMode {
                 hardwareMap.get(DcMotorEx.class, "motorLift"),
                 DcMotorSimple.Direction.REVERSE
         );
+
         liftController.setMaxMotorPower(LIFT_POWER);
 
         CRServo servoPivot = hardwareMap.get(CRServo.class, "servoPivot");
@@ -273,13 +305,15 @@ public class AutoParking extends LinearOpMode {
             driveForwardOneTile(mecanumMotors);
         }
 
-        driveForwardOneTile(mecanumMotors);
-        //pivot arm to the left?
-        //raise arm to medium setting
-        //release cone onto pole
-        //pivot back
-        //drop arm
-        driveBackwardOneTile(mecanumMotors);
+        driveForwardOneTile(mecanumMotors); //figure out how to add servograbber to method
+
+        armPivot(servoPivot, CRServo.Direction.FORWARD, servoGrabber);
+        armHeight(liftController, LIFT_LEVEL_2, servoGrabber);
+        holdCone(servoGrabber, 0);
+        armPivot(servoPivot, CRServo.Direction.REVERSE, null);
+        armHeight(liftController, LIFT_LEVEL_0, null);
+
+        driveBackwardOneTile(mecanumMotors); //figure out how to add servograbber to method
 
         if (tagOfInterest.id == LEFT_TAG_ID) {
             // Drive to the Left Zone.
