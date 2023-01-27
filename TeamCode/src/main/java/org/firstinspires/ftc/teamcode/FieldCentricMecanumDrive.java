@@ -28,9 +28,9 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
     
     // These values are marked as public to allow the dashboard to display them for tuning. 
     public static int LIFT_LEVEL_0 = 100;
-    public static int LIFT_LEVEL_1 = 1500;
-    public static int LIFT_LEVEL_2 = 2400;
-    public static int LIFT_LEVEL_3 = 3400;
+    public static int LIFT_LEVEL_1 = 1900;
+    public static int LIFT_LEVEL_2 = 2980;
+    public static int LIFT_LEVEL_3 = 4200;
     public static double LIFT_POWER = 1;
 
     private static final double PIVOT_POWER = 0.7;
@@ -115,7 +115,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
             /** Pivot Code ************************************************************************/
 
             if (Math.abs(gamepad2.right_stick_x) > 0.1){
-                servoPivot.setPower(gamepad2.right_stick_x * PIVOT_POWER);
+                servoPivot.setPower(-gamepad2.right_stick_x * PIVOT_POWER);
             }
             else {
                 servoPivot.setPower(0);
