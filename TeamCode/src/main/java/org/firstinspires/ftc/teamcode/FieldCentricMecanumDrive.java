@@ -24,7 +24,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
     public static double LIFT_KI = 0.0;
     public static double LIFT_KD = 0.001;
 
-    public static int MANUAL_LIFT_INCREMENT = 25;
+    public static int MANUAL_LIFT_INCREMENT = 60;
     
     // These values are marked as public to allow the dashboard to display them for tuning. 
     public static int LIFT_LEVEL_0 = 100;
@@ -41,8 +41,8 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
     /**********************************************************************************************/
 
-    public static double lowPowerFactor = 0.4;
-    public static double highPowerFactor = 0.6;
+    public static double lowPowerFactor = 0.6;
+    public static double highPowerFactor = 0.7;
 
     private int currentLiftLevel = 0;
     private double motorPowerFactor = lowPowerFactor;
