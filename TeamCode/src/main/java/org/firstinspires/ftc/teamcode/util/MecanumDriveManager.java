@@ -1,27 +1,21 @@
 package org.firstinspires.ftc.teamcode.util;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import java.util.Arrays;
 import java.util.List;
 
-/*
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
+/**
  * Simple class to manage a four wheel mecanum drive train.
- * 
- * This class assumes that the drive motors are named with the following convention:
- *  - motorFrontLeft
- *  - motorFrontRight
- *  - motorBackLeft
- *  - motorBackRight
- * 
- * This class has the following features:
- *  - Field centric drive
- *  - Motor power scaling
+ *
  */
 public class MecanumDriveManager {
     private DcMotorEx frontLeft;
@@ -30,7 +24,7 @@ public class MecanumDriveManager {
     private DcMotorEx backRight;
     private List<DcMotorEx> motors;
 
-    private BNO055IMU imu;
+    private IMU imu;
 
     // The following is used to correct for the fact that not every drive train is the same.
     // Some will need to reverse different motors and some will need to reverse the input of different gamepad axes.
@@ -60,34 +54,12 @@ public class MecanumDriveManager {
 
         // This section can add 2-3 seconds during the init phase of the robot
         // and can be quite annoying if you are not using it.
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        imu = hardwareMap.get(IMU.class, "imu");
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+            RevHubOrientationOnRobot.LogoFacingDirection.LEFT, 
+            RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD
+        ));
         imu.initialize(parameters);
-
-        // The following section is taken from the Roadrunner quickstart.
-        // TODO: If the hub containing the IMU you are using is mounted so that the "REV" logo does
-        // not face up, remap the IMU axes so that the z-axis points upward (normal to the floor.)
-        //
-        //             | +Z axis
-        //             |
-        //             |
-        //             |
-        //      _______|_____________     +Y axis
-        //     /       |_____________/|__________
-        //    /   REV / EXPANSION   //
-        //   /       / HUB         //
-        //  /_______/_____________//
-        // |_______/_____________|/
-        //        /
-        //       / +X axis
-        //
-        // This diagram is derived from the axes in section 3.4 https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bno055-ds000.pdf
-        // and the placement of the dot/orientation from https://docs.revrobotics.com/rev-control-system/control-system-overview/dimensions#imu-location
-        //
-        // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
-        // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
-        BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
 
         setMode(DriveMode.BOT_CENTRIC);
     }
@@ -104,7 +76,7 @@ public class MecanumDriveManager {
     // WARNING: Doing this un-intentionally can cause the robot to drive in a direction that is not expected.
     // Before using this method ensure that the robot is facing the correct direction.
     public void resetIMUZeroHeading() {
-        imu.initialize(imu.getParameters());
+        // TODO: Need to fix this. Now broken in the most recent update to the IMU.
     }
 
     public void setMotorPowers(double power) {
@@ -201,7 +173,7 @@ public class MecanumDriveManager {
     }
 
     public double getRawExternalHeading() {
-        return imu.getAngularOrientation().firstAngle;
+        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
     }
 
     public void setMode(DcMotor.RunMode runMode) {
