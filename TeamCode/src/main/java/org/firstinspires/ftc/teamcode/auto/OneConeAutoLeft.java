@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 @Config
 @Autonomous(name="One Cone Left + Park", group="Autonomous")
 public class OneConeAutoLeft extends LinearOpMode {
-    private static final double INSTANT_TIME = 1.0e-6;
+    private static double INSTANT_TIME = 1.0e-6;
 
     private ParkingLocationAnalyzer parkingLocationAnalyzer;
     private ParkingLocation parkingLocation;
@@ -30,6 +30,10 @@ public class OneConeAutoLeft extends LinearOpMode {
 
     private CRServo servoGrabber;
 
+    private static double GRABBER_OPEN_POWER = 0.7;
+
+    private TrajectorySequence scoreConeLowPole;
+
     @Override
     public void runOpMode() throws InterruptedException {
         drive = new SampleMecanumDrive(hardwareMap);
@@ -37,7 +41,6 @@ public class OneConeAutoLeft extends LinearOpMode {
 
         motorLift = hardwareMap.get(DcMotorEx.class, "motorLift");
         servoGrabber = hardwareMap.get(CRServo.class, "servoGrabber");
-
 
         // The following loop replaces `waitForStart()`.
         while (!isStarted() && !isStopRequested()) {
@@ -50,5 +53,7 @@ public class OneConeAutoLeft extends LinearOpMode {
             telemetry.addData("Parking Location:", parkingLocation);
             telemetry.update();
         }
+
+
     }
 }
