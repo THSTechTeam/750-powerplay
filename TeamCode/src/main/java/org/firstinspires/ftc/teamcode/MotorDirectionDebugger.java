@@ -61,15 +61,6 @@ public class MotorDirectionDebugger extends LinearOpMode {
         }
 
         while (!isStopRequested() && opModeIsActive()) {
-            telemetry.addLine("Press each button to turn on its respective motor");
-            telemetry.addLine();
-            telemetry.addLine("<font face=\"monospace\">Xbox/PS4 Button - Motor</font>");
-            telemetry.addLine("<font face=\"monospace\">&nbsp;&nbsp;X / ▢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Front Left</font>");
-            telemetry.addLine("<font face=\"monospace\">&nbsp;&nbsp;Y / Δ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Front Right</font>");
-            telemetry.addLine("<font face=\"monospace\">&nbsp;&nbsp;B / O&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Rear&nbsp;&nbsp;Right</font>");
-            telemetry.addLine("<font face=\"monospace\">&nbsp;&nbsp;A / X&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Rear&nbsp;&nbsp;Left</font>");
-            telemetry.addLine();
-
             if(gamepad1.x) {
                 motorFrontLeft.setPower(MOTOR_POWER);
                 telemetry.addLine("Running Motor: Front Left");
