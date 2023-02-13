@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+// import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.teamcode.util.DriveMode;
 import org.firstinspires.ftc.teamcode.util.MecanumDriveManager;
 import org.firstinspires.ftc.teamcode.util.PIDController;
@@ -33,11 +34,16 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
     public static int LIFT_LEVEL_3 = 4200;
     public static double LIFT_POWER = 1;
 
+    public static int START_STACK_POSITION = 700;
+    public static int STACK_POSITION_CONE_OFFSET = 150;
+
     private static final double PIVOT_POWER = 0.7;
     private static final double PIVOT_FRONT_POSITION = 1;
     private static final double PIVOT_BACK_POSITION = 0.25;
 
     private static final double GRABBER_POWER = 0.7;
+
+    // private VoltageSensor batteryVoltageSensor;
 
     /**********************************************************************************************/
 
@@ -67,6 +73,8 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
                 DcMotorSimple.Direction.REVERSE
             );
         liftController.setMaxMotorPower(LIFT_POWER);
+
+        // batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
 
         servoPivot = hardwareMap.get(CRServo.class, "servoPivot");
         servoGrabber = hardwareMap.get(CRServo.class, "servoGrabber");
@@ -103,6 +111,15 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
             }
             else if (gamepad2.a) {
                 liftController.setTargetPosition(LIFT_LEVEL_0);
+            } 
+            else if (gamepad2.dpad_up) {
+                liftController.setTargetPosition(START_STACK_POSITION);
+            }
+            else if (gamepad2.dpad_left) {
+                liftController.setTargetPosition(START_STACK_POSITION - STACK_POSITION_CONE_OFFSET);
+            }
+            else if (gamepad2.dpad_down) {
+                liftController.setTargetPosition(START_STACK_POSITION - (STACK_POSITION_CONE_OFFSET * 2));
             }
 
             // Manual lift control.
