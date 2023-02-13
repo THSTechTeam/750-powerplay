@@ -24,7 +24,7 @@ public class MecanumDriveManager {
     private DcMotorEx backRight;
     private List<DcMotorEx> motors;
 
-    private IMU imu;
+     private IMU imu;
 
     // The following is used to correct for the fact that not every drive train is the same.
     // Some will need to reverse different motors and some will need to reverse the input of different gamepad axes.
@@ -56,12 +56,12 @@ public class MecanumDriveManager {
 
         // This section can add 2-3 seconds during the init phase of the robot
         // and can be quite annoying if you are not using it.
-        imu = hardwareMap.get(IMU.class, "imu");
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-            RevHubOrientationOnRobot.LogoFacingDirection.LEFT, 
-            RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD
-        ));
-        imu.initialize(parameters);
+         imu = hardwareMap.get(IMU.class, "imu");
+         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+             RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+             RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD
+         ));
+         imu.initialize(parameters);
 
         setMode(DriveMode.BOT_CENTRIC);
     }
@@ -175,7 +175,8 @@ public class MecanumDriveManager {
     }
 
     public double getRawExternalHeading() {
-        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+         return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+//        return 0;
     }
 
     public void setMode(DcMotor.RunMode runMode) {

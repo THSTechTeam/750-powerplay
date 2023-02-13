@@ -70,7 +70,7 @@ public class AutoCodeSimple extends LinearOpMode {
             motor.setPower(drivePower);
         }
 
-        sleep((long) (TILE_METER_LENGTH / drivePower * 1500)); // but y tho
+        sleep((long) (TILE_METER_LENGTH / drivePower * 1300)); // but y tho
 
         for (DcMotor motor : driveMotors) {
             motor.setPower(0);
@@ -81,7 +81,7 @@ public class AutoCodeSimple extends LinearOpMode {
             motor.setPower(-drivePower);
         }
 
-        sleep((long) (TILE_METER_LENGTH / drivePower * 400));
+        sleep((long) (TILE_METER_LENGTH / drivePower * 300));
 
         for (DcMotor motor : driveMotors) {
             motor.setPower(0);
@@ -132,8 +132,9 @@ public class AutoCodeSimple extends LinearOpMode {
                 hardwareMap.get(DcMotor.class, "motorBackRight")
         };
 
-        // Reverse left side motors.
-        mecanumMotors[1].setDirection(DcMotorSimple.Direction.REVERSE);
+        mecanumMotors[0].setDirection(DcMotorSimple.Direction.REVERSE);
+        mecanumMotors[2].setDirection(DcMotorSimple.Direction.REVERSE);
+        mecanumMotors[3].setDirection(DcMotorSimple.Direction.REVERSE);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);

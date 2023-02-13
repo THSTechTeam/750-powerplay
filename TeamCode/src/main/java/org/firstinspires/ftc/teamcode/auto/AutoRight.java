@@ -15,16 +15,16 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.util.PIDController;
 
 @Config
-@Autonomous(name="Left + Park", group="Autonomous")
-public class AutoLeft extends LinearOpMode {
+@Autonomous(name="Right + Park", group="Autonomous")
+public class AutoRight extends LinearOpMode {
     private static final double INSTANT_TIME = 1.0e-6;
 
     private ParkingLocationAnalyzer parkingLocationAnalyzer;
     private ParkingLocation parkingLocation;
     private SampleMecanumDrive drive;
 
-    public static int START_STACK_POSITION = 700;
-    public static int STACK_POSITION_CONE_OFFSET = 150;
+    public static int START_STACK_POSITION = 0;
+    public static int STACK_POSITION_CONE_OFFSET = 0;
     public static int STACK_CYCLES = 1;
 
     private PIDController liftController;
@@ -33,7 +33,7 @@ public class AutoLeft extends LinearOpMode {
     public static double LIFT_KD = 0.001;
 
     public static int LIFT_LEVEL_0 = 150;
-    public static int LIFT_LEVEL_1 = 1800;
+    public static int LIFT_LEVEL_1 = 1900;
     public static int LIFT_LEVEL_2 = 2980;
     public static int LIFT_LEVEL_3 = 4200;
     public static double LIFT_POWER = 0.7;
@@ -43,7 +43,6 @@ public class AutoLeft extends LinearOpMode {
     private static double GRABBER_OPEN_POWER = 0.7;
 
     public static double x = 0;
-    public static double y2 = 0;
     public static double y = 15;
     public static double heading = 0;
     public static double approach = 0;
@@ -54,9 +53,8 @@ public class AutoLeft extends LinearOpMode {
     private TrajectorySequence grabCone;
     private Trajectory backUpToPole;
     private TrajectorySequence scoreConeHighPole;
-    private TrajectorySequence leftPark;
-    private TrajectorySequence rightPark;
-    private TrajectorySequence centerPark;
+    private Trajectory leftPark;
+    private Trajectory rightPark;
 
     private enum State {
         TRAJECTORY_1,
@@ -118,7 +116,7 @@ public class AutoLeft extends LinearOpMode {
 
         grabCone = drive.trajectorySequenceBuilder(setupForScoringCycle.end())
                 .waitSeconds(0.5)
-                .splineToConstantHeading(new Vector2d(setupForScoringCycle.end().getX() + 7, setupForScoringCycle.end().getY() + 16.5), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(setupForScoringCycle.end().getX() + x, setupForScoringCycle.end().getY() + y), Math.toRadians(90))
                 .waitSeconds(0.2)
                 .UNSTABLE_addTemporalMarkerOffset(INSTANT_TIME, () -> {
                     servoGrabber.setPower(0);
@@ -131,7 +129,7 @@ public class AutoLeft extends LinearOpMode {
                 .build();
 
         backUpToPole = drive.trajectoryBuilder(grabCone.end(), true)
-                .splineToSplineHeading(new Pose2d(grabCone.end().getX() + x, grabCone.end().getY() - y, Math.toRadians(0)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(grabCone.end().getX(), grabCone.end().getY() - y, Math.toRadians(heading)), Math.toRadians(90))
                 .build();
 
         scoreConeHighPole = drive.trajectorySequenceBuilder(backUpToPole.end())
@@ -144,18 +142,12 @@ public class AutoLeft extends LinearOpMode {
                 .splineToSplineHeading(setupForScoringCycle.end(), Math.toRadians(approach))
                 .build();
 
-        leftPark = drive.trajectorySequenceBuilder(setupForScoringCycle.end())
-                .lineTo(new Vector2d(setupForScoringCycle.end().getX() + x, setupForScoringCycle.end().getY() + 23 + y))
-                .turn(Math.toRadians(-90))
+        leftPark = drive.trajectoryBuilder(grabCone.end())
+                .splineToSplineHeading(new Pose2d(grabCone.end().getX(), grabCone.end().getY() + 23, Math.toRadians(0)), Math.toRadians(90))
                 .build();
 
-        rightPark = drive.trajectorySequenceBuilder(setupForScoringCycle.end())
-                .lineTo(new Vector2d(setupForScoringCycle.end().getX() + x, setupForScoringCycle.end().getY() - 23 + y))
-                .turn(Math.toRadians(-90))
-                .build();
-
-        centerPark = drive.trajectorySequenceBuilder(setupForScoringCycle.end())
-                .turn(Math.toRadians(-90))
+        rightPark = drive.trajectoryBuilder(grabCone.end(), true)
+                .splineToSplineHeading(new Pose2d(grabCone.end().getX(), grabCone.end().getY() - 23, Math.toRadians(0)), Math.toRadians(90))
                 .build();
 
         // The following loop replaces `waitForStart()`.
@@ -177,7 +169,14 @@ public class AutoLeft extends LinearOpMode {
         drive.followTrajectorySequenceAsync(scoreConeLowPole);
 
         int stackPosition = START_STACK_POSITION;
-        int currentCycle = 1;
+        int currentCycle = 0;
+
+        // for (int i = 0; i < STACK_CYCLES; i++) {
+        //     motorLift.setTargetPosition(stackPosition);
+        //     drive.followTrajectorySequence(grabCone);
+
+        //     stackPosition -= STACK_POSITION_CONE_OFFSET;
+        // }
 
         while (opModeIsActive() && !isStopRequested()) {
             switch (currentState) {
@@ -191,13 +190,13 @@ public class AutoLeft extends LinearOpMode {
                     if (!drive.isBusy()) {
                         currentState = State.TRAJECTORY_3;
                         liftController.setTargetPosition(0);
-//                        drive.followTrajectorySequenceAsync(setupForScoringCycle);
+                        drive.followTrajectorySequenceAsync(setupForScoringCycle);
                     }
                 case TRAJECTORY_3:
                     if (!drive.isBusy()) {
                         currentState = State.TRAJECTORY_4;
-                        // liftController.setTargetPosition(stackPosition);
-                        // drive.followTrajectorySequenceAsync(grabCone);
+                        liftController.setTargetPosition(stackPosition);
+                        drive.followTrajectorySequenceAsync(grabCone);
                     }
                     break;
                 case TRAJECTORY_4:
@@ -223,13 +222,11 @@ public class AutoLeft extends LinearOpMode {
                         } else {
                             currentState = State.PARK;
                             liftController.setTargetPosition(0);
-                            if (parkingLocation == ParkingLocation.LEFT) {
-                                drive.followTrajectorySequenceAsync(leftPark);
-                            } else if (parkingLocation == ParkingLocation.RIGHT) {
-                                drive.followTrajectorySequenceAsync(rightPark);
-                            } else {
-                                drive.followTrajectorySequenceAsync(centerPark);
-                            }
+                            // if (parkingLocation == ParkingLocation.LEFT) {
+                            //     drive.followTrajectoryAsync(leftPark);
+                            // } else {
+                            //     drive.followTrajectoryAsync(rightPark);
+                            // }
                         }
                     }
                     break;
