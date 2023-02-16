@@ -13,14 +13,14 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 /*
  * This is a advanced opmode for debugging your motor configuration.
- * 
+ *
  * To use this opmode simply follow the instructions displayed in the telemetry.
- * 
+ *
  * The opmode will start by turning on one motor for 0.5 seconds, indicate which motor spun.
  * This will repeat for each motor.
- * 
+ *
  * At the end change your config based on the output of the opmode.
- * 
+ *
  * Button Mappings:
  *
  * Xbox/PS4 Button - Motor
