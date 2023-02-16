@@ -72,7 +72,9 @@ public class PIDController {
 
         // Start the motor with proportional control.
         // This is done to simplify initialization of the lastTime variable.
-        motor.setPower(kP * (targetPosition - motor.getCurrentPosition()));
+        double power = kP * (targetPosition - motor.getCurrentPosition());
+        power = Math.max(-maxMotorPower, Math.min(maxMotorPower, power));
+        motor.setPower(power);
         lastTime = elapsedTime.milliseconds();
     }
 

@@ -18,6 +18,7 @@ public class LiftDebugger extends LinearOpMode {
     public static double KI = 0.0;
     public static double KD = 0.001;
     public static double KF = 0.0;
+    public static double MAX_LIFT_POWER = 1.0;
 
     public static int LIFT_LEVEL_0 = 100;
     public static int LIFT_LEVEL_1 = 1500;
@@ -44,6 +45,7 @@ public class LiftDebugger extends LinearOpMode {
         while (opModeIsActive()) {
             liftController.update();
             liftController.setConstants(KP, KI, KD, KF);
+            liftController.setMaxMotorPower(MAX_LIFT_POWER);
 
             liftController.setTargetPosition(liftController.getTargetPosition() - (int) (manualIncrement * gamepad1.right_stick_y));
 
