@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode
+package org.firstinspires.ftc.teamcode.opmode.testkotlin
 
 import android.util.Pair
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import org.firstinspires.ftc.teamcode.MotorAssignmentDebugger
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
 import java.util.ArrayList
 

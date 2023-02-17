@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.IMU
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.teamcode.common.drive.MecanumDrive
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.LiftSubsystem
 
 class Robot {
     lateinit var drive: MecanumDrive
@@ -14,6 +15,8 @@ class Robot {
     private lateinit var imu: IMU
     private lateinit var imuThread: Thread
     var imuAngle = 0.0
+
+    var lift: LiftSubsystem
 
     enum class OpMode {
         TELEOP,
@@ -25,6 +28,7 @@ class Robot {
     constructor(hardwareMap: HardwareMap, opMode: OpMode) {
         this.opMode = opMode
         drive = MecanumDrive(hardwareMap)
+        lift = LiftSubsystem(hardwareMap, opMode)
 
         imu = hardwareMap.get(IMU::class.java, "imu")
         val parameters = IMU.Parameters(RevHubOrientationOnRobot(
