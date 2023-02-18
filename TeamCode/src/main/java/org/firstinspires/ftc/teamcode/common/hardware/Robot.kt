@@ -1,21 +1,17 @@
 package org.firstinspires.ftc.teamcode.common.hardware
 
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.HardwareMap
-import com.qualcomm.robotcore.hardware.IMU
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.teamcode.common.drive.MecanumDrive
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.GrabberSubsystem
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.LiftSubsystem
 
 class Robot {
-    lateinit var drive: MecanumDrive
+    var asyncIMU: AsyncIMU? = null
 
-    private lateinit var imu: IMU
-    private lateinit var imuThread: Thread
-    var imuAngle = 0.0
-
+    var drive: MecanumDrive
+    var grabber: GrabberSubsystem
     var lift: LiftSubsystem
 
     enum class OpMode {
@@ -29,28 +25,20 @@ class Robot {
         this.opMode = opMode
         drive = MecanumDrive(hardwareMap)
         lift = LiftSubsystem(hardwareMap, opMode)
+        grabber = GrabberSubsystem(hardwareMap)
 
-        imu = hardwareMap.get(IMU::class.java, "imu")
-        val parameters = IMU.Parameters(RevHubOrientationOnRobot(
-            RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
-            RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD
-        ))
-        imu.initialize(parameters)
+        if (opMode == OpMode.TELEOP) {
+            asyncIMU = AsyncIMU(hardwareMap)
+        }
     }
 
     constructor(hardwareMap: HardwareMap) : this(hardwareMap, OpMode.TELEOP)
 
     fun startIMUThread(opMode: LinearOpMode) {
-        @Synchronized
-        fun getIMURobotHeading(): Double {
-            return -imu.robotYawPitchRollAngles.getYaw(AngleUnit.RADIANS)
-        }
+        asyncIMU?.startThread(opMode)
+    }
 
-        imuThread = Thread {
-            while (opMode.opModeIsActive() && !opMode.isStopRequested) {
-                imuAngle = getIMURobotHeading()
-            }
-        }
-        imuThread.start()
+    fun getIMUAngle(): Double {
+        return asyncIMU?.angle ?: 0.0
     }
 }

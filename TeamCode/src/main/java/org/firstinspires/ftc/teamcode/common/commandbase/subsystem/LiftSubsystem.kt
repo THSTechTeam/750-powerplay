@@ -6,10 +6,10 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 
 import org.firstinspires.ftc.teamcode.common.hardware.Robot.OpMode
-import org.firstinspires.ftc.teamcode.util.PIDController
+import org.firstinspires.ftc.teamcode.common.hardware.PIDController
 
 class LiftSubsystem : SubsystemBase {
-    var lift: PIDController
+    var controller: PIDController
     var kP = 0.003
     var kI = 0.0
     var kD = 0.001
@@ -19,7 +19,7 @@ class LiftSubsystem : SubsystemBase {
     constructor(hardwareMap: HardwareMap, opMode: OpMode) {
         this.opMode = opMode
 
-        this.lift = PIDController(
+        this.controller = PIDController(
             kP,
             kI,
             kD,
@@ -28,13 +28,13 @@ class LiftSubsystem : SubsystemBase {
         )
 
         if (opMode == OpMode.AUTO) {
-            lift.resetEncoder()
+            controller.resetEncoder()
         }
     }
 
     constructor(hardwareMap: HardwareMap) : this(hardwareMap, OpMode.TELEOP)
 
     fun update() {
-        lift.update()
+        controller.update()
     }
 }

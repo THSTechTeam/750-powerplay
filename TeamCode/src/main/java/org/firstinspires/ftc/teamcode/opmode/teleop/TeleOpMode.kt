@@ -5,18 +5,16 @@ import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.CRServo
-import com.qualcomm.robotcore.hardware.DcMotorEx
-import com.qualcomm.robotcore.hardware.DcMotorSimple
 
-import org.firstinspires.ftc.teamcode.common.hardware.Robot
+import org.firstinspires.ftc.teamcode.common.commandbase.commands.GrabberStateCommand
 import org.firstinspires.ftc.teamcode.common.commandbase.commands.LiftPositionCommand
-import org.firstinspires.ftc.teamcode.util.PIDController
+import org.firstinspires.ftc.teamcode.common.hardware.Robot
 
 import kotlin.math.abs
 
 @TeleOp(name = "TeleOpMode", group = "TeleOp")
 class TeleOpMode : LinearOpMode() {
-    private lateinit var grabber: CRServo
+    // private lateinit var grabber: CRServoWrapper
     private lateinit var pivot: CRServo
 
     private var manualLiftIncrement = 60
@@ -26,24 +24,31 @@ class TeleOpMode : LinearOpMode() {
 
     private var pivotPower = 0.7
 
-    // TODO: Need to check these values.
-    private var grabberOpenPower = 0.0
-    private var grabberClosePower = 0.7
+    // // TODO: Need to check these values.
+    // private var grabberOpenPower = 0.7
+    // private var grabberClosePower = 0.0
 
-    private var lowPowerFactor = 0.6
-    private var highPowerFactor = 0.7
+    private var lowPowerFactor = 0.3
+    private var highPowerFactor = 0.5
 
     private lateinit var robot: Robot
+
+    enum class DriveMode {
+        FIELD_CENTRIC,
+        BOT_CENTRIC
+    }
+
+    var driveMode = DriveMode.FIELD_CENTRIC
 
     override fun runOpMode() {
         CommandScheduler.getInstance().reset()
         pivot = hardwareMap.get(CRServo::class.java, "servoPivot")
-        grabber = hardwareMap.get(CRServo::class.java, "servoGrabber")
+        // grabber = CRServoWrapper(hardwareMap.get(CRServo::class.java, "servoGrabber"))
+        // grabber.setDirection(CRServoWrapper.Direction.REVERSE)
 
         var motorPowerFactor = lowPowerFactor
 
         robot = Robot(hardwareMap)
-        robot.startIMUThread(this)
 
         waitForStart()
 
@@ -55,30 +60,6 @@ class TeleOpMode : LinearOpMode() {
             // telemetry.addData("Currently at", " at %7d", lift.currentPosition)
             // telemetry.update()
             // lift.update()
-
-            // // Lift Controls
-            // if (gamepad2.x) {
-            //     lift.targetPosition = liftLevel1
-            // } else if (gamepad2.y) {
-            //     lift.targetPosition = liftLevel2
-            // } else if (gamepad2.b) {
-            //     lift.targetPosition = liftLevel3
-            // } else if (gamepad2.a) {
-            //     lift.targetPosition = liftLevel0
-            // } else if (gamepad2.dpad_up) {
-            //     lift.targetPosition = startStackPosition
-            // } else if (gamepad2.dpad_left) {
-            //     lift.targetPosition = startStackPosition - stackConeOffset
-            // } else if (gamepad2.dpad_down) {
-            //     lift.targetPosition = startStackPosition - (stackConeOffset * 2)
-            // }
-
-            // // Manual lift control.
-            // lift.targetPosition = lift.targetPosition - (gamepad2.left_stick_y * manualLiftIncrement)
-
-            // if (gamepad2.dpad_right) {
-            //     lift.resetEncoder()
-            // }
 
             // Preset lift positions.
             if (gamepad2.a) {
@@ -105,11 +86,13 @@ class TeleOpMode : LinearOpMode() {
             }
 
             // Manual lift control.
-            robot.liftSubsystem.liftMotor.targetPosition = 
-                robot.liftSubsystem.liftMotor.targetPosition - (gamepad2.left_stick_y * manualLiftIncrement)
+            if (abs(gamepad2.left_stick_y) > 0.1) {
+                CommandScheduler.getInstance().schedule(LiftPositionCommand(
+                    robot.lift, (robot.lift.controller.targetPosition - (gamepad2.left_stick_y * manualLiftIncrement)).toInt()))
+            }
 
-            if (gamepad2.dpad_right) {
-                robot.liftSubsystem.liftMotor.resetEncoder()
+            if (gamepad2.dpad_right && !robot.lift.controller.isBusy()) {
+                robot.lift.controller.resetEncoder()
             }
 
             // Pivot Controls
@@ -120,10 +103,14 @@ class TeleOpMode : LinearOpMode() {
             }
 
             // Grabber Controls
-            if(gamepad2.right_trigger > 0.5) {
-                grabber.power = grabberClosePower
-            } else {
-                grabber.power = grabberOpenPower
+            if (gamepad2.right_trigger > 0.5) {
+                CommandScheduler.getInstance().schedule(GrabberStateCommand(
+                    robot.grabber, GrabberStateCommand.State.CLOSE
+                ))
+            } else if (gamepad2.left_trigger > 0.5) {
+                CommandScheduler.getInstance().schedule(GrabberStateCommand(
+                    robot.grabber, GrabberStateCommand.State.OPEN
+                ))
             }
 
             if (gamepad1.a) {
@@ -132,10 +119,16 @@ class TeleOpMode : LinearOpMode() {
                 motorPowerFactor = highPowerFactor
             }
 
+            if (gamepad1.x) {
+                driveMode = DriveMode.BOT_CENTRIC
+            } else if (gamepad1.y) {
+                driveMode = DriveMode.FIELD_CENTRIC
+            }
+
             robot.drive.setWeightedDrivePower(Pose2d(
                 -gamepad1.left_stick_y.toDouble(),
                 -gamepad1.left_stick_x.toDouble(),
-                -gamepad1.right_stick_x.toDouble()
+                -gamepad1.right_stick_x.toDouble(),
             ).times(motorPowerFactor))
 
             CommandScheduler.getInstance().run()

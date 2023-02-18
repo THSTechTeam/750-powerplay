@@ -46,10 +46,10 @@ class LiftPositionCommand : CommandBase {
     }
 
     override fun initialize() {
-        liftSubsystem.lift.targetPosition = positionTick.toDouble()
+        liftSubsystem.controller.targetPosition = positionTick
     }
 
     override fun isFinished(): Boolean {
-        return abs(liftSubsystem.lift.targetPosition - liftSubsystem.lift.currentPosition) < allowedError
+        return abs(liftSubsystem.controller.targetPosition - liftSubsystem.controller.currentPosition) < allowedError
     }
 }
