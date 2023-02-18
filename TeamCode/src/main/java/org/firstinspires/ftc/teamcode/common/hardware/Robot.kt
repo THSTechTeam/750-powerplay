@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.GrabberSubsys
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.LiftSubsystem
 
 class Robot {
-    var asyncIMU: AsyncIMU? = null
+    // var asyncIMU: AsyncIMU? = null
 
     var drive: MecanumDrive
     var grabber: GrabberSubsystem
@@ -27,18 +27,18 @@ class Robot {
         lift = LiftSubsystem(hardwareMap, opMode)
         grabber = GrabberSubsystem(hardwareMap)
 
-        if (opMode == OpMode.TELEOP) {
-            asyncIMU = AsyncIMU(hardwareMap)
-        }
+        // if (opMode == OpMode.TELEOP) {
+        //     asyncIMU = AsyncIMU(hardwareMap)
+        // }
     }
 
     constructor(hardwareMap: HardwareMap) : this(hardwareMap, OpMode.TELEOP)
 
-    fun startIMUThread(opMode: LinearOpMode) {
-        asyncIMU?.startThread(opMode)
-    }
+    // fun startIMUThread(opMode: LinearOpMode) {
+    //     asyncIMU?.startThread(opMode)
+    // }
 
-    fun getIMUAngle(): Double {
-        return asyncIMU?.angle ?: 0.0
-    }
+    // fun getIMUAngle(): Double {
+    //     return asyncIMU?.angle ?: 0.0
+    // }
 }
