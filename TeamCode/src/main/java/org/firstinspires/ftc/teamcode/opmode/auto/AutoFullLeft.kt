@@ -25,37 +25,44 @@ class AutoFullLeft : LinearOpMode() {
         robot = Robot(hardwareMap, Robot.OpMode.AUTO)
         robot.drive.poseEstimate = Pose2d()
 
+        // To break the trajectory spline path we need to pause for a very short amount of time.
+        // This prevents the trajectory builder from trying to spline the paths together when we don't want it to.
+        val instantTime = 0.00000000001
+
         val trajectory1 = robot.drive.trajectorySequenceBuilder()
-            .lineTo(Vector2d(3.0, -6.0))
-            .lineTo(Vector2d(55.0, 1.0))
-            .lineTo(Vector2d(52.0, -6.0))
+            .splineToConstantHeading(Vector2d(3.0, 3.0), Math.toRadians(0.0))
+            .splineToConstantHeading(Vector2d(44.0, 5.0), Math.toRadians(0.0))
+            .splineToConstantHeading(Vector2d(52.5, -5.0), Math.toRadians(-60.0))
             .build()
 
         val trajectory2 = robot.drive.trajectorySequenceBuilder(trajectory1.end())
-            .lineTo(Vector2d(55.0, -12.0))
+            .lineTo(Vector2d(45.0, -4.0))
+            .waitSeconds(instantTime)
+            .splineToSplineHeading(Pose2d(56.0, 11.0, Math.toRadians(90.0)), Math.toRadians(90.0))
+            .splineToConstantHeading(Vector2d(56.0, 24.25), Math.toRadians(90.0))
             .build()
 
-        val trajectory3 = robot.drive.trajectorySequenceBuilder(trajectory2.end())
-            .lineTo(Vector2d(50.0, -13.0))
-            .lineToSplineHeading(Pose2d(53.5, -1.5, Math.toRadians(90.0)))
+        val trajectory3 = robot.drive.trajectoryBuilder(trajectory2.end(), true)
+            .splineToConstantHeading(Vector2d(52.5, 5.0), Math.toRadians(-90.0))
+            .splineToSplineHeading(Pose2d(53.5, -5.0, Math.toRadians(0.0)), Math.toRadians(-70.0))
             .build()
 
-        val trajectory4 = robot.drive.trajectorySequenceBuilder(trajectory3.end())
-            .lineTo(Vector2d(56.0, 18.0))
+       val trajectory4 = robot.drive.trajectorySequenceBuilder(trajectory3.end())
+            .lineTo(Vector2d(45.0, -3.5))
+            .waitSeconds(instantTime)
+            .splineToSplineHeading(Pose2d(55.0, 11.0, Math.toRadians(90.0)), Math.toRadians(90.0))
+            .splineToConstantHeading(Vector2d(53.0, 24.25), Math.toRadians(90.0))
             .build()
 
-        val trajectory5 = robot.drive.trajectorySequenceBuilder(trajectory4.end())
-            .lineTo(Vector2d(50.0, 0.0))
-            .lineToSplineHeading(Pose2d(52.0, -6.0, Math.toRadians(0.0)))
+        val trajectory5 = robot.drive.trajectoryBuilder(trajectory4.end(), true)
+            .splineToConstantHeading(Vector2d(53.0, 5.0), Math.toRadians(-90.0))
+            .splineToSplineHeading(Pose2d(53.5, -5.0, Math.toRadians(0.0)), Math.toRadians(-70.0))
             .build()
 
-        val trajectory6 = robot.drive.trajectorySequenceBuilder(trajectory5.end())
-            .lineTo(Vector2d(55.0, -12.0))
-            .build()
-
-        val trajectoryParkCenter = robot.drive.trajectorySequenceBuilder(trajectory6.end())
-            .lineTo(Vector2d(50.0, -13.0))
-            .lineTo(Vector2d(53.0, 0.0))
+        val parkCenterTrajectory = robot.drive.trajectorySequenceBuilder(trajectory5.end())
+            .lineTo(Vector2d(46.0, -5.5))
+            .waitSeconds(instantTime)
+            .splineToSplineHeading(Pose2d(53.0, 2.0, Math.toRadians(90.0)), Math.toRadians(90.0))
             .build()
 
         waitForStart()
@@ -63,26 +70,41 @@ class AutoFullLeft : LinearOpMode() {
         CommandScheduler.getInstance().schedule(
             SequentialCommandGroup(
                 ParallelCommandGroup(
+                    FollowTrajectorySequenceCommand(robot.drive, trajectory1),
                     LiftPositionCommand(robot.lift, LiftPositionCommand.Position.GROUND),
                     GrabberStateCommand(robot.grabber, GrabberStateCommand.State.CLOSE),
-                    FollowTrajectorySequenceCommand(robot.drive, trajectory1),
-                    WaitCommand(5000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.HIGH))
+                    WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.HIGH))
                 ),
-                FollowTrajectorySequenceCommand(robot.drive, trajectory2),
-                WaitCommand(750).andThen(ParallelCommandGroup(
-                    GrabberStateCommand(robot.grabber, GrabberStateCommand.State.OPEN),
-                    FollowTrajectorySequenceCommand(robot.drive, trajectory3),
-                )),
-                LiftPositionCommand(robot.lift, LiftPositionCommand.Position.CONE_STACK_5),
-                FollowTrajectorySequenceCommand(robot.drive, trajectory4),
+                LiftPositionCommand(robot.lift, LiftPositionCommand.Position.LOWER_THROUGH_HIGH),
+                GrabberStateCommand(robot.grabber, GrabberStateCommand.State.OPEN),
+                ParallelCommandGroup(
+                    FollowTrajectorySequenceCommand(robot.drive, trajectory2),
+                    WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.CONE_STACK_5))
+                ),
+                WaitCommand(250).andThen(GrabberStateCommand(robot.grabber, GrabberStateCommand.State.CLOSE)),
+                LiftPositionCommand(robot.lift, LiftPositionCommand.Position.MEDIUM),
+                ParallelCommandGroup(
+                    FollowTrajectoryCommand(robot.drive, trajectory3),
+                    WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.HIGH))
+                ),
+                LiftPositionCommand(robot.lift, LiftPositionCommand.Position.LOWER_THROUGH_HIGH),
+                GrabberStateCommand(robot.grabber, GrabberStateCommand.State.OPEN),
+                ParallelCommandGroup(
+                    FollowTrajectorySequenceCommand(robot.drive, trajectory4),
+                    WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.CONE_STACK_4))
+                ),
                 GrabberStateCommand(robot.grabber, GrabberStateCommand.State.CLOSE),
                 LiftPositionCommand(robot.lift, LiftPositionCommand.Position.MEDIUM),
-                FollowTrajectorySequenceCommand(robot.drive, trajectory5),
-                LiftPositionCommand(robot.lift, LiftPositionCommand.Position.HIGH),
-                FollowTrajectorySequenceCommand(robot.drive, trajectory6),
-                WaitCommand(750).andThen(GrabberStateCommand(robot.grabber, GrabberStateCommand.State.OPEN)),
-                FollowTrajectorySequenceCommand(robot.drive, trajectoryParkCenter),
-                LiftPositionCommand(robot.lift, LiftPositionCommand.Position.ZERO),
+                ParallelCommandGroup(
+                    FollowTrajectoryCommand(robot.drive, trajectory5),
+                    WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.HIGH))
+                ),
+                LiftPositionCommand(robot.lift, LiftPositionCommand.Position.LOWER_THROUGH_HIGH),
+                GrabberStateCommand(robot.grabber, GrabberStateCommand.State.OPEN),
+                ParallelCommandGroup(
+                    FollowTrajectorySequenceCommand(robot.drive, parkCenterTrajectory),
+                    WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.ZERO))
+                ),
                 InstantCommand(this::requestOpModeStop)
             )
         )
@@ -91,6 +113,9 @@ class AutoFullLeft : LinearOpMode() {
             CommandScheduler.getInstance().run()
             robot.drive.update()
             robot.lift.update()
+
+            telemetry.addData("Pose", robot.drive.poseEstimate)
+            telemetry.update()
         }
     }
 }

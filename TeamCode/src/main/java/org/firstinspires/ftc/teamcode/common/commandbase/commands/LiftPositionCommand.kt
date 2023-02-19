@@ -14,7 +14,8 @@ class LiftPositionCommand : CommandBase {
     }
 
     enum class Position(val tick: Int) {
-        HIGH(4200),
+        HIGH(4100),
+        LOWER_THROUGH_HIGH(3800),
         MEDIUM(2980),
         LOW(1900),
         CONE_STACK_5(startStackPosition),

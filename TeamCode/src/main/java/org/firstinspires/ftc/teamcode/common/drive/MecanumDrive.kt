@@ -43,7 +43,7 @@ import org.firstinspires.ftc.teamcode.drive.DriveConstants.kV
 class MecanumDrive(hardwareMap: HardwareMap) : com.acmerobotics.roadrunner.drive.MecanumDrive(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, lateralMultiplier) {
     companion object {
         private val TRANSLATIONAL_PID = PIDCoefficients(2.0, 0.0, 0.0)
-        private val HEADING_PID = PIDCoefficients(5.0, 0.0, 0.0)
+        private val HEADING_PID = PIDCoefficients(6.0, 0.0, 0.0)
 
         private const val lateralMultiplier = 1.578947368421053
     }
@@ -55,7 +55,7 @@ class MecanumDrive(hardwareMap: HardwareMap) : com.acmerobotics.roadrunner.drive
     private val motors: List<DcMotorEx>
 
     private var follower = HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
-                Pose2d(0.1, 0.1, Math.toRadians(1.0)), 0.3);
+                Pose2d(0.1, 0.1, Math.toRadians(1.0)), 0.1);
     private var trajectorySequenceRunner = TrajectorySequenceRunner(follower, HEADING_PID)
 
     private var VEL_CONSTRAINT: TrajectoryVelocityConstraint = MinVelocityConstraint(listOf(
