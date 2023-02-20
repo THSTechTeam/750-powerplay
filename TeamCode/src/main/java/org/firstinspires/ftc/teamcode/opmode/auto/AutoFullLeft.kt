@@ -98,11 +98,15 @@ class AutoFullLeft : LinearOpMode() {
                     )),
                 ),
                 GrabberStateCommand(robot.grabber, GrabberStateCommand.State.CLOSE),
-                LiftPositionCommand(robot.lift, LiftPositionCommand.Position.MEDIUM),
-                PivotResetIntoClock90Sequence(robot.pivot),
                 ParallelCommandGroup(
-                    FollowTrajectoryCommand(robot.drive, trajectory3),
-                    WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.HIGH)),
+                    LiftPositionCommand(robot.lift, LiftPositionCommand.Position.MEDIUM),
+                    WaitCommand(700).andThen(ParallelCommandGroup(
+                        PivotResetIntoClock90Sequence(robot.pivot),
+                        ParallelCommandGroup(
+                            FollowTrajectoryCommand(robot.drive, trajectory3),
+                            WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.HIGH)),
+                        )
+                    ))
                 ),
                 LiftPositionCommand(robot.lift, LiftPositionCommand.Position.LOWER_THROUGH_HIGH),
                 GrabberStateCommand(robot.grabber, GrabberStateCommand.State.OPEN),
@@ -114,11 +118,15 @@ class AutoFullLeft : LinearOpMode() {
                     )),
                 ),
                 GrabberStateCommand(robot.grabber, GrabberStateCommand.State.CLOSE),
-                LiftPositionCommand(robot.lift, LiftPositionCommand.Position.MEDIUM),
-                PivotResetIntoClock90Sequence(robot.pivot),
                 ParallelCommandGroup(
-                    FollowTrajectoryCommand(robot.drive, trajectory5),
-                    WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.HIGH)),
+                    LiftPositionCommand(robot.lift, LiftPositionCommand.Position.MEDIUM),
+                    WaitCommand(700).andThen(ParallelCommandGroup(
+                        PivotResetIntoClock90Sequence(robot.pivot),
+                        ParallelCommandGroup(
+                            FollowTrajectoryCommand(robot.drive, trajectory5),
+                            WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.HIGH)),
+                        )
+                    ))
                 ),
                 LiftPositionCommand(robot.lift, LiftPositionCommand.Position.LOWER_THROUGH_HIGH),
                 GrabberStateCommand(robot.grabber, GrabberStateCommand.State.OPEN),

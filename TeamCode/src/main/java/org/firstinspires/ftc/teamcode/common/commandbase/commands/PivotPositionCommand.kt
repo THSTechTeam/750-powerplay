@@ -9,7 +9,7 @@ class PivotPositionCommand : CommandBase {
     enum class Position(val power: Double) {
         CLOCK90(-0.5),
         COUNTER90(0.5),
-        CLOCK70(-0.3)
+        CLOCK70(-0.4)
     }
 
     var pivotSubsystem: PivotSubsystem
