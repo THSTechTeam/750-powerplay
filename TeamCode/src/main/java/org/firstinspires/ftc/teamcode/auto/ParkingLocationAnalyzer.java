@@ -77,4 +77,8 @@ public class ParkingLocationAnalyzer {
 
         return currentParkingLocation;
     }
+
+    public void stop() {
+        camera.stopStreaming();
+    }
 }
