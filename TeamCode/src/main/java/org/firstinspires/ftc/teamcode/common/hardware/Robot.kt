@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.common.drive.MecanumDrive
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.GrabberSubsystem
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.LiftSubsystem
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.PivotSubsystem
 
 class Robot {
     // var asyncIMU: AsyncIMU? = null
@@ -13,6 +14,7 @@ class Robot {
     var drive: MecanumDrive
     var grabber: GrabberSubsystem
     var lift: LiftSubsystem
+    var pivot: PivotSubsystem
 
     enum class OpMode {
         TELEOP,
@@ -26,6 +28,7 @@ class Robot {
         drive = MecanumDrive(hardwareMap)
         lift = LiftSubsystem(hardwareMap, opMode)
         grabber = GrabberSubsystem(hardwareMap)
+        pivot = PivotSubsystem(hardwareMap)
 
         // if (opMode == OpMode.TELEOP) {
         //     asyncIMU = AsyncIMU(hardwareMap)

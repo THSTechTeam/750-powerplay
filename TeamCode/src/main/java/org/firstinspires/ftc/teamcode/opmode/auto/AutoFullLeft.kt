@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.commands.FollowTrajecto
 import org.firstinspires.ftc.teamcode.common.commandbase.commands.FollowTrajectorySequenceCommand
 import org.firstinspires.ftc.teamcode.common.commandbase.commands.GrabberStateCommand
 import org.firstinspires.ftc.teamcode.common.commandbase.commands.LiftPositionCommand
+import org.firstinspires.ftc.teamcode.common.commandbase.commands.PivotPositionCommand
 import org.firstinspires.ftc.teamcode.common.hardware.Robot
 
 @Autonomous(name = "Full Left", group = "auto")
@@ -97,46 +98,47 @@ class AutoFullLeft : LinearOpMode() {
         CommandScheduler.getInstance().schedule(
             SequentialCommandGroup(
                 ParallelCommandGroup(
-                    FollowTrajectorySequenceCommand(robot.drive, trajectory1),
+//                    FollowTrajectorySequenceCommand(robot.drive, trajectory1),
                     LiftPositionCommand(robot.lift, LiftPositionCommand.Position.GROUND),
                     GrabberStateCommand(robot.grabber, GrabberStateCommand.State.CLOSE),
-                    WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.HIGH))
+                    WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.MEDIUM))
                 ),
-                LiftPositionCommand(robot.lift, LiftPositionCommand.Position.LOWER_THROUGH_HIGH),
-                GrabberStateCommand(robot.grabber, GrabberStateCommand.State.OPEN),
-                ParallelCommandGroup(
-                    FollowTrajectorySequenceCommand(robot.drive, trajectory2),
-                    WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.CONE_STACK_5))
-                ),
-                WaitCommand(250).andThen(GrabberStateCommand(robot.grabber, GrabberStateCommand.State.CLOSE)),
-                LiftPositionCommand(robot.lift, LiftPositionCommand.Position.MEDIUM),
-                ParallelCommandGroup(
-                    FollowTrajectoryCommand(robot.drive, trajectory3),
-                    WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.HIGH))
-                ),
-                LiftPositionCommand(robot.lift, LiftPositionCommand.Position.LOWER_THROUGH_HIGH),
-                GrabberStateCommand(robot.grabber, GrabberStateCommand.State.OPEN),
-                ParallelCommandGroup(
-                    FollowTrajectorySequenceCommand(robot.drive, trajectory4),
-                    WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.CONE_STACK_4))
-                ),
-                GrabberStateCommand(robot.grabber, GrabberStateCommand.State.CLOSE),
-                LiftPositionCommand(robot.lift, LiftPositionCommand.Position.MEDIUM),
-                ParallelCommandGroup(
-                    FollowTrajectoryCommand(robot.drive, trajectory5),
-                    WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.HIGH))
-                ),
-                LiftPositionCommand(robot.lift, LiftPositionCommand.Position.LOWER_THROUGH_HIGH),
-                GrabberStateCommand(robot.grabber, GrabberStateCommand.State.OPEN),
-                ParallelCommandGroup(
-                    when (parkingLocation) {
-                    ParkingLocation.LEFT -> FollowTrajectorySequenceCommand(robot.drive, parkLeftTrajectory)
-                    ParkingLocation.CENTER -> FollowTrajectorySequenceCommand(robot.drive, parkCenterTrajectory)
-                    ParkingLocation.RIGHT -> FollowTrajectorySequenceCommand(robot.drive, parkRightTrajectory)
-                    },
-                    WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.ZERO))
-                ),
-                InstantCommand(this::requestOpModeStop)
+                PivotPositionCommand(robot.pivot, PivotPositionCommand.Position.COUNTER90),
+                // LiftPositionCommand(robot.lift, LiftPositionCommand.Position.LOWER_THROUGH_HIGH),
+                // GrabberStateCommand(robot.grabber, GrabberStateCommand.State.OPEN),
+                // ParallelCommandGroup(
+                //     FollowTrajectorySequenceCommand(robot.drive, trajectory2),
+                //     WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.CONE_STACK_5))
+                // ),
+                // WaitCommand(250).andThen(GrabberStateCommand(robot.grabber, GrabberStateCommand.State.CLOSE)),
+                // LiftPositionCommand(robot.lift, LiftPositionCommand.Position.MEDIUM),
+                // ParallelCommandGroup(
+                //     FollowTrajectoryCommand(robot.drive, trajectory3),
+                //     WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.HIGH))
+                // ),
+                // LiftPositionCommand(robot.lift, LiftPositionCommand.Position.LOWER_THROUGH_HIGH),
+                // GrabberStateCommand(robot.grabber, GrabberStateCommand.State.OPEN),
+                // ParallelCommandGroup(
+                //     FollowTrajectorySequenceCommand(robot.drive, trajectory4),
+                //     WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.CONE_STACK_4))
+                // ),
+                // GrabberStateCommand(robot.grabber, GrabberStateCommand.State.CLOSE),
+                // LiftPositionCommand(robot.lift, LiftPositionCommand.Position.MEDIUM),
+                // ParallelCommandGroup(
+                //     FollowTrajectoryCommand(robot.drive, trajectory5),
+                //     WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.HIGH))
+                // ),
+                // LiftPositionCommand(robot.lift, LiftPositionCommand.Position.LOWER_THROUGH_HIGH),
+                // GrabberStateCommand(robot.grabber, GrabberStateCommand.State.OPEN),
+                // ParallelCommandGroup(
+                //     when (parkingLocation) {
+                //     ParkingLocation.LEFT -> FollowTrajectorySequenceCommand(robot.drive, parkLeftTrajectory)
+                //     ParkingLocation.CENTER -> FollowTrajectorySequenceCommand(robot.drive, parkCenterTrajectory)
+                //     ParkingLocation.RIGHT -> FollowTrajectorySequenceCommand(robot.drive, parkRightTrajectory)
+                //     },
+                //     WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.ZERO))
+                // ),
+                // InstantCommand(this::requestOpModeStop)
             )
         )
 
