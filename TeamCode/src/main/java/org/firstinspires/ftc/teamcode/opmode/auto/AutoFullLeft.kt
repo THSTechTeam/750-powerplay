@@ -34,16 +34,16 @@ class AutoFullLeft : LinearOpMode() {
         val trajectory1 = robot.drive.trajectorySequenceBuilder()
             .splineToConstantHeading(Vector2d(3.0, 3.0), Math.toRadians(0.0))
             .splineToConstantHeading(Vector2d(45.0, 5.0), Math.toRadians(0.0))
-            .splineToSplineHeading(Pose2d(57.0, -4.75, Math.toRadians(-60.0)), Math.toRadians(-40.0))
+            .splineToSplineHeading(Pose2d(57.0, -6.0, Math.toRadians(-60.0)), Math.toRadians(-40.0))
             .build()
 
         val trajectory2 = robot.drive.trajectoryBuilder(trajectory1.end(), true)
             .splineToSplineHeading(Pose2d(55.0, 11.0, Math.toRadians(-90.0)), Math.toRadians(90.0))
-            .splineToConstantHeading(Vector2d(53.0, 34.0), Math.toRadians(90.0))
+            .splineToConstantHeading(Vector2d(54.0, 34.0), Math.toRadians(90.0))
             .build()
 
         val trajectory3 = robot.drive.trajectoryBuilder(trajectory2.end())
-            .splineToSplineHeading(Pose2d(57.0, -3.0, Math.toRadians(-70.0)), Math.toRadians(-80.0))
+            .splineToSplineHeading(Pose2d(56.0, -3.5, Math.toRadians(-70.0)), Math.toRadians(-80.0))
             .build()
 
         val trajectory4 = robot.drive.trajectoryBuilder(trajectory3.end(), true)
@@ -108,39 +108,39 @@ class AutoFullLeft : LinearOpMode() {
                         )
                     ))
                 ),
-                LiftPositionCommand(robot.lift, LiftPositionCommand.Position.LOWER_THROUGH_HIGH),
+                // LiftPositionCommand(robot.lift, LiftPositionCommand.Position.LOWER_THROUGH_HIGH),
                 WaitCommand(100).andThen(GrabberStateCommand(robot.grabber, GrabberStateCommand.State.OPEN)),
-                ParallelCommandGroup(
-                    FollowTrajectoryCommand(robot.drive, trajectory4),
-                    WaitCommand(1000).andThen(ParallelCommandGroup(
-                        LiftPositionCommand(robot.lift, LiftPositionCommand.Position.CONE_STACK_4),
-                        PivotPositionCommand(robot.pivot, PivotPositionCommand.Position.COUNTER90),
-                    )),
-                ),
-                GrabberStateCommand(robot.grabber, GrabberStateCommand.State.CLOSE),
-                ParallelCommandGroup(
-                    LiftPositionCommand(robot.lift, LiftPositionCommand.Position.MEDIUM),
-                    WaitCommand(700).andThen(ParallelCommandGroup(
-                        PivotResetIntoClock90Sequence(robot.pivot),
-                        ParallelCommandGroup(
-                            FollowTrajectoryCommand(robot.drive, trajectory5),
-                            WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.HIGH)),
-                        )
-                    ))
-                ),
-                LiftPositionCommand(robot.lift, LiftPositionCommand.Position.LOWER_THROUGH_HIGH),
-                WaitCommand(100).andThen(GrabberStateCommand(robot.grabber, GrabberStateCommand.State.OPEN)),
-                ParallelCommandGroup(
-                    when (parkingLocation) {
-                        ParkingLocation.LEFT -> FollowTrajectoryCommand(robot.drive, parkLeftTrajectory)
-                        ParkingLocation.CENTER -> FollowTrajectoryCommand(robot.drive, parkCenterTrajectory)
-                        ParkingLocation.RIGHT -> FollowTrajectoryCommand(robot.drive, parkRightTrajectory)
-                    },
-                    WaitCommand(500).andThen(ParallelCommandGroup(
-                        LiftPositionCommand(robot.lift, LiftPositionCommand.Position.ZERO),
-                        PivotPositionCommand(robot.pivot, PivotPositionCommand.Position.CLOCK70),
-                    ))
-                ),
+                // ParallelCommandGroup(
+                //     FollowTrajectoryCommand(robot.drive, trajectory4),
+                //     WaitCommand(1000).andThen(ParallelCommandGroup(
+                //         LiftPositionCommand(robot.lift, LiftPositionCommand.Position.CONE_STACK_4),
+                //         PivotPositionCommand(robot.pivot, PivotPositionCommand.Position.COUNTER90),
+                //     )),
+                // ),
+                // GrabberStateCommand(robot.grabber, GrabberStateCommand.State.CLOSE),
+                // ParallelCommandGroup(
+                //     LiftPositionCommand(robot.lift, LiftPositionCommand.Position.MEDIUM),
+                //     WaitCommand(700).andThen(ParallelCommandGroup(
+                //         PivotResetIntoClock90Sequence(robot.pivot),
+                //         ParallelCommandGroup(
+                //             FollowTrajectoryCommand(robot.drive, trajectory5),
+                //             WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.HIGH)),
+                //         )
+                //     ))
+                // ),
+                // LiftPositionCommand(robot.lift, LiftPositionCommand.Position.LOWER_THROUGH_HIGH),
+                // WaitCommand(100).andThen(GrabberStateCommand(robot.grabber, GrabberStateCommand.State.OPEN)),
+                // ParallelCommandGroup(
+                //     when (parkingLocation) {
+                //         ParkingLocation.LEFT -> FollowTrajectoryCommand(robot.drive, parkLeftTrajectory)
+                //         ParkingLocation.CENTER -> FollowTrajectoryCommand(robot.drive, parkCenterTrajectory)
+                //         ParkingLocation.RIGHT -> FollowTrajectoryCommand(robot.drive, parkRightTrajectory)
+                //     },
+                //     WaitCommand(500).andThen(ParallelCommandGroup(
+                //         LiftPositionCommand(robot.lift, LiftPositionCommand.Position.ZERO),
+                //         PivotPositionCommand(robot.pivot, PivotPositionCommand.Position.CLOCK70),
+                //     ))
+                // ),
                 WaitCommand(250).andThen(InstantCommand(this::requestOpModeStop))
             )
         )

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -13,16 +14,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Config
 @TeleOp(name="Servo Test", group="Teleop")
 public class ServoTest extends LinearOpMode {
-    private CRServo pivot;
+    private Servo pivot;
     private CRServo grabber;
 
-    public static int leftTime = 500;
-    public static int rightTime = 500;
-    public static double servoPower = 0.7;
+    public static double forwardPosition = 0.1;
+    public static double position90 = 0.5;
+    public static double position180 = 0.7;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        pivot = hardwareMap.crservo.get("servoPivot");
+        pivot = hardwareMap.servo.get("servoPivot");
         grabber = hardwareMap.crservo.get("servoGrabber");
         grabber.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -37,13 +38,11 @@ public class ServoTest extends LinearOpMode {
             }
 
             if (gamepad1.a) {
-                pivot.setPower(servoPower);
-                sleep(leftTime);
-                pivot.setPower(0);
+                pivot.setPosition(forwardPosition);
             } else if (gamepad1.b) {
-                pivot.setPower(-servoPower);
-                sleep(rightTime);
-                pivot.setPower(0);
+                pivot.setPosition(position90);
+            } else if (gamepad1.y) {
+                pivot.setPosition(position180);
             }
         }
     }
