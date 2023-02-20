@@ -8,7 +8,8 @@ import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.PivotSubsyste
 class PivotPositionCommand : CommandBase {
     enum class Position(val power: Double) {
         CLOCK90(-0.5),
-        COUNTER90(0.5)
+        COUNTER90(0.5),
+        CLOCK70(-0.3)
     }
 
     var pivotSubsystem: PivotSubsystem
