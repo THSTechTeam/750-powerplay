@@ -32,7 +32,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
     public static int LIFT_LEVEL_1 = 1900;
     public static int LIFT_LEVEL_2 = 2980;
     public static int LIFT_LEVEL_3 = 4200;
-    public static double LIFT_POWER = 1;
+    public static double LIFT_POWER = 0.65;
 
     public static int START_STACK_POSITION = 700;
     public static int STACK_POSITION_CONE_OFFSET = 150;
