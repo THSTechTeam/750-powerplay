@@ -57,7 +57,7 @@ class AutoFullRight : LinearOpMode() {
 
         val parkLeftTrajectory = robot.drive.trajectoryBuilder(trajectory5.end(), true)
             .splineToSplineHeading(Pose2d(-57.0, -11.0, Math.toRadians(90.0)), Math.toRadians(-90.0))
-            .splineToConstantHeading(Vector2d(-55.0, -35.0), Math.toRadians-(90.0))
+            .splineToConstantHeading(Vector2d(-55.0, -35.0), Math.toRadians(-90.0))
             .build()
 
         val parkCenterTrajectory = robot.drive.trajectoryBuilder(trajectory5.end(), true)
