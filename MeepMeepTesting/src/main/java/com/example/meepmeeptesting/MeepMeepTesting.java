@@ -14,27 +14,21 @@ public class MeepMeepTesting {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(70, 35, Math.toRadians(180)))
-                                //insert april tag code before auto code
-                                //read april tag
-                                .forward(46)
-                                //raise to tallest setting
-                                //pivot arm to be near pole
-                                //open grabber
-                                //re-pivot
-                                //go to ground arm setting
-                                .back(12)
-                                //if (tagOfInterest.id == LEFT_TAG_ID) {
-                                //            // Drive to the Left Zone.
-                                //            .forward(18)
-                                //            .strafeLeft(18)
-                                //        } else if (tagOfInterest.id == CENTER_TAG_ID) {
-                                //            // Drive to the Center Zone.
-                                //            stay
-                                //        } else if (tagOfInterest.id == RIGHT_TAG_ID) {
-                                //            // Drive to the Right Zone.
-                                //            .forward(18)
-                                //            .strafeRight(18)
-                                //        }
+                                .splineToConstantHeading(new Vector2d(3.0, 3.0), Math.toRadians(0.0))
+                                .splineToConstantHeading(new Vector2d(45.0, 5.0), Math.toRadians(0.0))
+                                .splineToSplineHeading(new Pose2d(57.0, -6.0, Math.toRadians(-60.0)), Math.toRadians(-40.0))
+                                .waitSeconds(0.5)
+                                .splineToSplineHeading(new Pose2d(55.0, 11.0, Math.toRadians(-90.0)), Math.toRadians(90.0))
+                                .splineToConstantHeading(new Vector2d(54.0, 34.0), Math.toRadians(90.0))
+                                .waitSeconds(0.5)
+                                .splineToSplineHeading(new Pose2d(56.0, -3.5, Math.toRadians(-70.0)), Math.toRadians(-80.0))
+                                .waitSeconds(0.5)
+                                .splineToSplineHeading(new Pose2d(57.0, 11.0, Math.toRadians(-90.0)), Math.toRadians(90.0))
+                                .splineToConstantHeading(new Vector2d(57.0, 35.0), Math.toRadians(90.0))
+                                .waitSeconds(0.5)
+                                .splineToSplineHeading(new Pose2d(58.0, -2.50, Math.toRadians(-70.0)), Math.toRadians(-80.0))
+                                .waitSeconds(0.5)
+                                .splineToSplineHeading(new Pose2d(57.0, 11.0, Math.toRadians(-90.0)), Math.toRadians(90.0))
                                 .build()
                 );
 
