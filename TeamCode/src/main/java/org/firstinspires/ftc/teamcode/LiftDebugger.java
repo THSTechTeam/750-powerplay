@@ -7,7 +7,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.util.PIDFController;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+@Disabled
 @Config
 @TeleOp(name="Lift Debugger", group="TeleOp")
 public class LiftDebugger extends LinearOpMode {

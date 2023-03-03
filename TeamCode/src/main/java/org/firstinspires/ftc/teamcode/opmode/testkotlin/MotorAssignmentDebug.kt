@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
 import java.util.ArrayList
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 
 /*
  * This is a advanced opmode for debugging your motor configuration.
@@ -40,6 +41,7 @@ import java.util.ArrayList
  *
  * Uncomment the @Disabled tag below to use this opmode.
  */
+@Disabled
 @TeleOp(name = "Motor Assignment Debug", group = "Debug")
 class MotorAssignmentDebug : LinearOpMode() {
     private enum class Motor {

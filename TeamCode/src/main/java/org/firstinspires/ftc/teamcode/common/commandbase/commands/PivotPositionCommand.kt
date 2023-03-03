@@ -1,46 +1,30 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.commands
 
 import com.arcrobotics.ftclib.command.CommandBase
-import com.qualcomm.robotcore.util.ElapsedTime
 
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.PivotSubsystem
 
 class PivotPositionCommand : CommandBase {
-    enum class Position(val power: Double) {
-        CLOCK90(-0.5),
+    enum class Position(val positionTick: Double) {
+        FORWARD(0.0),
         COUNTER90(0.5),
-        CLOCK70(-0.4)
+        COUNTER180(1.0)
     }
 
     var pivotSubsystem: PivotSubsystem
     var position: Position
-
-    var timer: ElapsedTime? = null
-    var pivotTime = 740
+    private val tolerance = 0.05
 
     constructor(pivotSubsystem: PivotSubsystem, position: Position) {
         this.pivotSubsystem = pivotSubsystem
         this.position = position
     }
 
-    override fun execute() {
-        if (timer != null) {
-            return
-        }
-
-        timer = ElapsedTime()
-        pivotSubsystem.pivot.power = position.power
+    override fun initialize() {
+        pivotSubsystem.pivot.position = position.positionTick
     }
 
     override fun isFinished(): Boolean {
-        return if (timer == null) {
-            false
-        } else {
-            timer!!.milliseconds() >= pivotTime
-        }
-    }
-
-    override fun end(interrupted: Boolean) {
-        pivotSubsystem.pivot.power = 0.0
+        return pivotSubsystem.pivot.position - position.positionTick < tolerance
     }
 }

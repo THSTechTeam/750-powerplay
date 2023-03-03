@@ -19,6 +19,7 @@ package org.firstinspires.ftc.teamcode;/*
  * SOFTWARE.
  */
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -32,6 +33,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
 
+@Disabled
 @Autonomous
 public class AutoCodeSimple extends LinearOpMode {
     //INTRODUCE VARIABLES HERE

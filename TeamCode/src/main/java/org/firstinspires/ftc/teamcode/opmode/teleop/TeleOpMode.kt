@@ -12,6 +12,8 @@ import org.firstinspires.ftc.teamcode.common.hardware.Robot
 
 import kotlin.math.abs
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
+
 @TeleOp(name = "TeleOpMode", group = "TeleOp")
 class TeleOpMode : LinearOpMode() {
     // private lateinit var grabber: CRServoWrapper

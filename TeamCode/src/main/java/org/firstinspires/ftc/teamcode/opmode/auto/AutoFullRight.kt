@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.auto
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.geometry.Vector2d
 import com.arcrobotics.ftclib.command.CommandScheduler
@@ -12,7 +13,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 
 import org.firstinspires.ftc.teamcode.auto.ParkingLocation
 import org.firstinspires.ftc.teamcode.auto.ParkingLocationAnalyzer
-import org.firstinspires.ftc.teamcode.common.commandbase.auto.PivotResetIntoClock90Sequence
 import org.firstinspires.ftc.teamcode.common.commandbase.commands.FollowTrajectoryCommand
 import org.firstinspires.ftc.teamcode.common.commandbase.commands.FollowTrajectorySequenceCommand
 import org.firstinspires.ftc.teamcode.common.commandbase.commands.GrabberStateCommand
@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.commands.LiftPositionCo
 import org.firstinspires.ftc.teamcode.common.commandbase.commands.PivotPositionCommand
 import org.firstinspires.ftc.teamcode.common.hardware.Robot
 
+@Disabled
 @Autonomous(name = "Full Right", group = "auto")
 class AutoFullRight : LinearOpMode() {
     override fun runOpMode() {
@@ -94,14 +95,14 @@ class AutoFullRight : LinearOpMode() {
                     FollowTrajectoryCommand(robot.drive, trajectory2),
                     WaitCommand(1000).andThen(ParallelCommandGroup(
                         LiftPositionCommand(robot.lift, LiftPositionCommand.Position.CONE_STACK_5),
-                        PivotPositionCommand(robot.pivot, PivotPositionCommand.Position.COUNTER90),
+                        PivotPositionCommand(robot.pivot, PivotPositionCommand.Position.COUNTER180),
                     )),
                 ),
                 GrabberStateCommand(robot.grabber, GrabberStateCommand.State.CLOSE),
                 ParallelCommandGroup(
                     LiftPositionCommand(robot.lift, LiftPositionCommand.Position.MEDIUM),
                     WaitCommand(700).andThen(ParallelCommandGroup(
-                        PivotResetIntoClock90Sequence(robot.pivot),
+                            PivotPositionCommand(robot.pivot, PivotPositionCommand.Position.COUNTER90),
                         ParallelCommandGroup(
                             FollowTrajectoryCommand(robot.drive, trajectory3),
                             WaitCommand(1000).andThen(LiftPositionCommand(robot.lift, LiftPositionCommand.Position.HIGH)),

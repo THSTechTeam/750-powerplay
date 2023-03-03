@@ -13,6 +13,8 @@ import org.openftc.easyopencv.OpenCvCamera.AsyncCameraOpenListener
 import org.openftc.easyopencv.OpenCvCameraRotation
 import org.openftc.easyopencv.OpenCvWebcam
 import java.lang.NullPointerException
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
+
 
 /*
  * Copyright (c) 2021 OpenFTC Team
@@ -33,7 +35,9 @@ import java.lang.NullPointerException
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- */@Autonomous
+ */
+@Disabled
+@Autonomous
 class AutoCodeSimpleKotlin : LinearOpMode() {
     var camera: OpenCvCamera? = null
     var aprilTagDetectionPipeline: AprilTagDetectionPipeline? = null

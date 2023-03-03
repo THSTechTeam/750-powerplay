@@ -17,9 +17,9 @@ public class ServoTest extends LinearOpMode {
     private Servo pivot;
     private CRServo grabber;
 
-    public static double forwardPosition = 0.1;
+    public static double forwardPosition = 0.0;
     public static double position90 = 0.5;
-    public static double position180 = 0.7;
+    public static double position180 = 1.0;
 
     @Override
     public void runOpMode() throws InterruptedException {

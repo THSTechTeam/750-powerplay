@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 // import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.teamcode.util.DriveMode;
 import org.firstinspires.ftc.teamcode.util.MecanumDriveManager;
@@ -17,7 +18,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
     private MecanumDriveManager drive;
 
     private CRServo servoGrabber = null;
-    private CRServo servoPivot = null;
+    private Servo servoPivot = null;
 
     /** Change these values to modify motor/servo positions and speeds ****************************/
     private PIDController liftController;
@@ -32,14 +33,14 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
     public static int LIFT_LEVEL_1 = 1900;
     public static int LIFT_LEVEL_2 = 2980;
     public static int LIFT_LEVEL_3 = 4200;
-    public static double LIFT_POWER = 0.65;
+    public static double LIFT_POWER = 0.9;
 
     public static int START_STACK_POSITION = 700;
     public static int STACK_POSITION_CONE_OFFSET = 150;
 
-    private static final double PIVOT_POWER = 0.7;
-    private static final double PIVOT_FRONT_POSITION = 1;
-    private static final double PIVOT_BACK_POSITION = 0.25;
+    public static double PIVOT_POWER = 0.05;
+    public static double PIVOT_FRONT_POSITION = 0.0;
+    public static double PIVOT_BACK_POSITION = 0.5;
 
     private static final double GRABBER_POWER = 0.7;
 
@@ -47,7 +48,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
     /**********************************************************************************************/
 
-    public static double lowPowerFactor = 0.6;
+    public static double lowPowerFactor = 0.5;
     public static double highPowerFactor = 0.7;
 
     private int currentLiftLevel = 0;
@@ -76,7 +77,7 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
         // batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        servoPivot = hardwareMap.get(CRServo.class, "servoPivot");
+        servoPivot = hardwareMap.get(Servo.class, "servoPivot");
         servoGrabber = hardwareMap.get(CRServo.class, "servoGrabber");
 
         servoGrabber.setDirection(CRServo.Direction.REVERSE);
@@ -91,6 +92,8 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
         if (isStopRequested()) {
             return;
         }
+
+        servoPivot.setPosition(0.0);
 
         while (opModeIsActive()) {
             telemetry.addData("Currently at", " at %7d", liftController.getCurrentPosition());
@@ -131,11 +134,12 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
 
             /** Pivot Code ************************************************************************/
 
-            if (Math.abs(gamepad2.right_stick_x) > 0.1){
-                servoPivot.setPower(-gamepad2.right_stick_x * PIVOT_POWER);
-            }
-            else {
-                servoPivot.setPower(0);
+            if (Math.abs(gamepad2.right_stick_x) > 0.1) {
+                servoPivot.setPosition(servoPivot.getPosition() - (PIVOT_POWER * gamepad2.right_stick_x));
+            } else if (gamepad2.left_bumper) {
+                servoPivot.setPosition(PIVOT_BACK_POSITION);
+            } else if (gamepad2.right_bumper) {
+                servoPivot.setPosition(PIVOT_FRONT_POSITION);
             }
 
            /** Grabber Code ***********************************************************************/
