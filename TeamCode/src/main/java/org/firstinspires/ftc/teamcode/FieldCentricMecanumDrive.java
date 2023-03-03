@@ -38,9 +38,10 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
     public static int START_STACK_POSITION = 700;
     public static int STACK_POSITION_CONE_OFFSET = 150;
 
-    public static double PIVOT_POWER = 0.05;
+    public static double PIVOT_POWER = 0.03;
     public static double PIVOT_FRONT_POSITION = 0.0;
-    public static double PIVOT_BACK_POSITION = 0.5;
+    public static double PIVOT_SIDE_POSITION = 0.5;
+    public static double PIVOT_BACK_POSITION = 1.0;
 
     private static final double GRABBER_POWER = 0.7;
 
@@ -93,9 +94,10 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
             return;
         }
 
-        servoPivot.setPosition(0.0);
+        servoPivot.setPosition(0.5);
 
         while (opModeIsActive()) {
+            telemetry.addData("Current Drive Power", motorPowerFactor);
             telemetry.addData("Currently at", " at %7d", liftController.getCurrentPosition());
             telemetry.update();
             liftController.update();
@@ -137,9 +139,11 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
             if (Math.abs(gamepad2.right_stick_x) > 0.1) {
                 servoPivot.setPosition(servoPivot.getPosition() - (PIVOT_POWER * gamepad2.right_stick_x));
             } else if (gamepad2.left_bumper) {
-                servoPivot.setPosition(PIVOT_BACK_POSITION);
+                servoPivot.setPosition(PIVOT_SIDE_POSITION);
             } else if (gamepad2.right_bumper) {
                 servoPivot.setPosition(PIVOT_FRONT_POSITION);
+            } else if (gamepad2.left_trigger > 0.5) {
+                servoPivot.setPosition(PIVOT_BACK_POSITION);
             }
 
            /** Grabber Code ***********************************************************************/
@@ -169,7 +173,12 @@ public class FieldCentricMecanumDrive extends LinearOpMode {
                     motorPowerFactor
             );
 
+            if (gamepad1.left_trigger > 0.5) {
+                drive.resetIMU();
+            }
+
             idle();
         }
     }
 }
+q`

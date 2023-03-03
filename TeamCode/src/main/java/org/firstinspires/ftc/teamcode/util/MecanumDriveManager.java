@@ -59,7 +59,7 @@ public class MecanumDriveManager {
          imu = hardwareMap.get(IMU.class, "imu");
          IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
              RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
-             RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD
+             RevHubOrientationOnRobot.UsbFacingDirection.UP
          ));
          imu.initialize(parameters);
 
@@ -193,5 +193,9 @@ public class MecanumDriveManager {
         for (DcMotorEx motor : motors) {
             motor.setZeroPowerBehavior(zeroPowerBehavior);
         }
+    }
+
+    public void resetIMU() {
+        imu.resetYaw();
     }
 }
